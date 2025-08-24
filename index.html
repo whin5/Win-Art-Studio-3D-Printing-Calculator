@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Printing Cost Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>3D Printing Cost Calculator</h1>
+    
+    <form id="calcForm">
+      <label for="material">Material:</label>
+      <select id="material">
+        <option value="filament">Filament</option>
+        <option value="resin">Resin</option>
+      </select>
+
+      <label for="weight">Weight (grams/ml):</label>
+      <input type="number" id="weight" required>
+
+      <label for="price">Price per unit (₱):</label>
+      <input type="number" id="price" required>
+
+      <label for="labor">Labor cost (₱):</label>
+      <input type="number" id="labor" required>
+
+      <label for="overhead">Overhead cost (₱):</label>
+      <input type="number" id="overhead" required>
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <h2>Total Cost: ₱<span id="total">0</span></h2>
+
+    <h3>History</h3>
+    <ul id="history"></ul>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
