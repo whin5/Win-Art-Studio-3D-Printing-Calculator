@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Win Art Studio – 3D Print Cost & Income Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; padding: 0; background: #f4f4f4; }
+    h1 { text-align: center; }
+    .container { background: #fff; padding: 20px; border-radius: 10px; max-width: 700px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+    button { margin-top: 15px; padding: 10px; width: 100%; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #218838; }
+    .result { margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Win Art Studio – 3D Print Cost & Income Tracker</h1>
+    <label for="material">Material:</label>
+    <select id="material">
+      <option value="filament">Filament</option>
+      <option value="resin">Resin</option>
+    </select>
+
+    <label for="weight">Weight (grams/ml):</label>
+    <input type="number" id="weight" placeholder="Enter weight">
+
+    <label for="costPerUnit">Cost per kg/L:</label>
+    <input type="number" id="costPerUnit" placeholder="Enter cost per kg (filament) or L (resin)">
+
+    <label for="printTime">Print Time (hours):</label>
+    <input type="number" id="printTime" placeholder="Enter time">
+
+    <label for="rate">Hourly Rate (₱):</label>
+    <input type="number" id="rate" placeholder="Enter your rate">
+
+    <label for="markup">Markup Percentage (%):</label>
+    <input type="number" id="markup" placeholder="Enter profit %">
+
+    <button onclick="calculateCost()">Calculate</button>
+    <button onclick="exportToExcel()">Export to Excel</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateCost() {
+      const material = document.getElementById("material").value;
+      const weight = parseFloat(document.getElementById("weight").value) || 0;
+      const costPerUnit = parseFloat(document.getElementById("costPerUnit").value) || 0;
+      const printTime = parseFloat(document.getElementById("printTime").value) || 0;
+      const rate = parseFloat(document.getElementById("rate").value) || 0;
+      const markup = parseFloat(document.getElementById("markup").value) || 0;
+
+      let materialCost = 0;
+      if (material === "filament") {
+        materialCost = (weight / 1000) * costPerUnit;
+      } else if (material === "resin") {
+        materialCost = (weight / 1000) * costPerUnit;
+      }
+
+      const laborCost = printTime * rate;
+      const totalCost = materialCost + laborCost;
+      const finalPrice = totalCost * (1 + markup / 100);
+      const income = finalPrice - totalCost;
+
+      document.getElementById("result").innerHTML = `
+        <p><strong>Material Cost:</strong> ₱${materialCost.toFixed(2)}</p>
+        <p><strong>Labor Cost:</strong> ₱${laborCost.toFixed(2)}</p>
+        <p><strong>Total Cost:</strong> ₱${totalCost.toFixed(2)}</p>
+        <p><strong>Final Price (with markup):</strong> ₱${finalPrice.toFixed(2)}</p>
+        <p><strong>Expected Income:</strong> ₱${income.toFixed(2)}</p>
+      `;
+    }
+
+    function exportToExcel() {
+      const result = document.getElementById("result").innerText;
+      const blob = new Blob([result], { type: "application/vnd.ms-excel" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "3d_print_costs.xls";
+      link.click();
+    }
+  </script>
+</body>
+</html>
