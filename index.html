@@ -40,6 +40,7 @@
       <button id="r-calc" class="btn">Calculate</button>
     </div>
     <div id="r-results" class="results"></div>
+    <button id="r-exportInvoice" class="btn">Export Invoice</button>
   </div>
 
   <!-- Filament Tab -->
@@ -51,3 +52,36 @@
       <label>Filament Price<input type="number" id="f-price" value="1000"></label>
       <label>Filament Used (g)<input type="number" id="f-used" value="100"></label>
       <label>Print Time (hours)<input type="number" id="f-time" value="7.5"></label>
+      <label>Printer Power Draw (W)<input type="number" id="f-watts" value="70"></label>
+      <label>Electricity Rate<input type="number" id="f-kwh" value="12"></label>
+      <label>Labor Rate<input type="number" id="f-laborRate" value="250"></label>
+      <label>Machine Amortization (per hour)<input type="number" id="f-machine" value="60"></label>
+      <label>Markup %<input type="number" id="f-markup" value="30"></label>
+      <button id="f-calc" class="btn">Calculate</button>
+    </div>
+    <div id="f-results" class="results"></div>
+    <button id="f-exportInvoice" class="btn">Export Invoice</button>
+  </div>
+
+  <!-- History Tab -->
+  <div id="history" class="tab-panel" style="display:none;">
+    <h2>Project History</h2>
+    <table id="historyTable">
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th>Type</th>
+          <th>Total Cost</th>
+          <th>Total Income</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="total-income">Total Income: <span id="totalIncome">0</span></div>
+    <button id="exportHistory" class="btn">Export History to Excel</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
