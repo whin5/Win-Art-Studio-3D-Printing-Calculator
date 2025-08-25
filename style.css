@@ -110,3 +110,7 @@ th, td {
 tfoot td {
   font-weight: bold;
 }
+
+tbody tr:nth-child(odd) {
+  background: #f9f9f9;
+}
