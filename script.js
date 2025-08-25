@@ -1,40 +1,33 @@
-function calculateCost() {
-  const currency = document.getElementById("currency").value || "₱";
+function calculate() {
+  const currency = document.getElementById("currency").value;
+  const resinPrice = parseFloat(document.getElementById("resinPrice").value);
+  const resinUsed = parseFloat(document.getElementById("resinUsed").value);
+  const wastage = parseFloat(document.getElementById("wastage").value) / 100;
+  const ipa = parseFloat(document.getElementById("ipa").value);
+  const printTime = parseFloat(document.getElementById("printTime").value);
+  const printerPower = parseFloat(document.getElementById("printerPower").value);
+  const electricityRate = parseFloat(document.getElementById("electricityRate").value);
+  const laborRate = parseFloat(document.getElementById("laborRate").value);
+  const operatorHours = parseFloat(document.getElementById("operatorHours").value);
+  const machineAmort = parseFloat(document.getElementById("machineAmort").value);
+  const markup = parseFloat(document.getElementById("markup").value) / 100;
 
-  const resinPrice = parseFloat(document.getElementById("resinPrice").value) || 0;
-  const resinUsed = parseFloat(document.getElementById("resinUsed").value) || 0;
-  const wastage = parseFloat(document.getElementById("wastage").value) || 0;
+  // Costs
+  const materialCost = ((resinUsed / 1000) * resinPrice) * (1 + wastage) + ipa;
+  const electricityCost = (printerPower * printTime / 1000) * electricityRate;
+  const laborCost = laborRate * operatorHours;
+  const machineCost = machineAmort * printTime;
 
-  const ipa = parseFloat(document.getElementById("ipa").value) || 0;
-  const printTime = parseFloat(document.getElementById("printTime").value) || 0;
-  const power = parseFloat(document.getElementById("power").value) || 0;
-  const rate = parseFloat(document.getElementById("rate").value) || 0;
+  const totalCost = materialCost + electricityCost + laborCost + machineCost;
+  const finalPrice = totalCost * (1 + markup);
+  const income = finalPrice - totalCost;
 
-  const laborRate = parseFloat(document.getElementById("laborRate").value) || 0;
-  const laborHours = parseFloat(document.getElementById("laborHours").value) || 0;
-  const amortization = parseFloat(document.getElementById("amortization").value) || 0;
-  const markup = parseFloat(document.getElementById("markup").value) || 0;
-
-  // Material cost
-  const resinCost = (resinPrice / 1000) * resinUsed;
-  const wastageCost = resinCost * (wastage / 100);
-  const materialCost = resinCost + wastageCost + ipa;
-
-  // Electricity
-  const electricityCost = ((power * printTime) / 1000) * rate;
-
-  // Labor
-  const laborCost = laborRate * laborHours;
-
-  // Total
-  const totalCost = materialCost + electricityCost + laborCost + amortization;
-
-  // Final price
-  const finalPrice = totalCost * (1 + markup / 100);
-
-  document.getElementById("materialCost").innerText = currency + materialCost.toFixed(2);
-  document.getElementById("electricityCost").innerText = currency + electricityCost.toFixed(2);
-  document.getElementById("laborCost").innerText = currency + laborCost.toFixed(2);
-  document.getElementById("totalCost").innerText = currency + totalCost.toFixed(2);
-  document.getElementById("finalPrice").innerText = currency + finalPrice.toFixed(2);
+  // Display
+  document.getElementById("materialCost").innerText = `Material Cost: ${currency}${materialCost.toFixed(2)}`;
+  document.getElementById("electricityCost").innerText = `Electricity Cost: ${currency}${electricityCost.toFixed(2)}`;
+  document.getElementById("laborCost").innerText = `Labor Cost: ${currency}${laborCost.toFixed(2)}`;
+  document.getElementById("machineCost").innerText = `Machine Amortization: ${currency}${machineCost.toFixed(2)}`;
+  document.getElementById("totalCost").innerText = `Total Cost: ${currency}${totalCost.toFixed(2)}`;
+  document.getElementById("finalPrice").innerText = `Final Price (with Markup): ${currency}${finalPrice.toFixed(2)}`;
+  document.getElementById("income").innerText = `Estimated Income: ${currency}${income.toFixed(2)}`;
 }
