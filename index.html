@@ -16,70 +16,57 @@
     <img id="logoPreview" src="" alt="Company Logo" style="display:none; max-height:50px;">
   </header>
 
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="resin">Resin</button>
-    <button class="tab-btn" data-tab="filament">Filament</button>
-    <button class="tab-btn" data-tab="history">History</button>
-  </div>
+  <div class="grid">
+    <label>Project Type
+      <select id="projectType">
+        <option value="resin">Resin</option>
+        <option value="filament">Filament</option>
+      </select>
+    </label>
+    <label>Project Name<input type="text" id="name"></label>
+    <label>Currency<input type="text" id="currency" placeholder="e.g., PHP"></label>
 
-  <!-- Resin Tab -->
-  <div id="resin" class="tab-panel">
-    <h2>Resin Project</h2>
-    <div class="grid">
-      <label>Project Name<input type="text" id="r-name"></label>
-      <label>Currency<input type="text" id="r-currency" placeholder="e.g., PHP"></label>
+    <!-- Resin Inputs -->
+    <div id="resinInputs">
       <label>Resin Bottle Price<input type="number" id="r-bottlePrice" value="1200"></label>
       <label>Bottle Volume (ml)<input type="number" id="r-bottleVolume" value="1000"></label>
       <label>Resin Used (ml)<input type="number" id="r-ml" value="90"></label>
-      <label>Print Time (hours)<input type="number" id="r-time" value="7.5"></label>
-      <label>Printer Power Draw (W)<input type="number" id="r-watts" value="70"></label>
-      <label>Electricity Rate<input type="number" id="r-kwh" value="12"></label>
-      <label>Labor Rate<input type="number" id="r-laborRate" value="250"></label>
-      <label>Machine Amortization (per hour)<input type="number" id="r-machine" value="60"></label>
-      <label>Markup %<input type="number" id="r-markup" value="30"></label>
-      <button id="r-calc" class="btn">Calculate</button>
     </div>
-    <div id="r-results" class="results"></div>
-    <button id="r-exportInvoice" class="btn">Export Invoice</button>
-  </div>
 
-  <!-- Filament Tab -->
-  <div id="filament" class="tab-panel" style="display:none;">
-    <h2>Filament Project</h2>
-    <div class="grid">
-      <label>Project Name<input type="text" id="f-name"></label>
-      <label>Currency<input type="text" id="f-currency" placeholder="e.g., PHP"></label>
+    <!-- Filament Inputs -->
+    <div id="filamentInputs" style="display:none;">
       <label>Filament Price<input type="number" id="f-price" value="1000"></label>
       <label>Filament Used (g)<input type="number" id="f-used" value="100"></label>
-      <label>Print Time (hours)<input type="number" id="f-time" value="7.5"></label>
-      <label>Printer Power Draw (W)<input type="number" id="f-watts" value="70"></label>
-      <label>Electricity Rate<input type="number" id="f-kwh" value="12"></label>
-      <label>Labor Rate<input type="number" id="f-laborRate" value="250"></label>
-      <label>Machine Amortization (per hour)<input type="number" id="f-machine" value="60"></label>
-      <label>Markup %<input type="number" id="f-markup" value="30"></label>
-      <button id="f-calc" class="btn">Calculate</button>
     </div>
-    <div id="f-results" class="results"></div>
-    <button id="f-exportInvoice" class="btn">Export Invoice</button>
+
+    <!-- Common Inputs -->
+    <label>Print Time (hours)<input type="number" id="time" value="7.5"></label>
+    <label>Printer Power Draw (W)<input type="number" id="watts" value="70"></label>
+    <label>Electricity Rate<input type="number" id="kwh" value="12"></label>
+    <label>Labor Rate<input type="number" id="laborRate" value="250"></label>
+    <label>Machine Amortization (per hour)<input type="number" id="machine" value="60"></label>
+    <label>Markup %<input type="number" id="markup" value="30"></label>
+
+    <button id="calc" class="btn">Calculate</button>
   </div>
 
-  <!-- History Tab -->
-  <div id="history" class="tab-panel" style="display:none;">
-    <h2>Project History</h2>
-    <table id="historyTable">
-      <thead>
-        <tr>
-          <th>Project Name</th>
-          <th>Type</th>
-          <th>Total Cost</th>
-          <th>Total Income</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <div class="total-income">Total Income: <span id="totalIncome">0</span></div>
-    <button id="exportHistory" class="btn">Export History to Excel</button>
-  </div>
+  <div id="results" class="results"></div>
+  <button id="exportInvoice" class="btn">Export Invoice</button>
+
+  <h2>Project History</h2>
+  <table id="historyTable">
+    <thead>
+      <tr>
+        <th>Project Name</th>
+        <th>Type</th>
+        <th>Total Cost</th>
+        <th>Total Income</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="total-income">Total Income: <span id="totalIncome">0</span></div>
+  <button id="exportHistory" class="btn">Export History to Excel</button>
 </div>
 
 <script src="script.js"></script>
