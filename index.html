@@ -115,7 +115,11 @@
 
     <!-- History Panel -->
     <div id="panel-history" class="tab-panel" style="display:none;">
-      <button id="export-history" class="btn">Export All History to Excel</button>
+      <div class="history-controls">
+        <button id="import-history" class="btn">Import Projects</button>
+        <input type="file" id="import-file" style="display:none;">
+        <button id="export-history" class="btn">Export All History to Excel</button>
+      </div>
       <table id="history-table">
         <thead>
           <tr>
