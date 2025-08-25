@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Win Art Studio: 3D Printing Calculator & Income Tracker</title>
+<title>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>Win Art Studio: 3D Printing Calculator & Income Tracker</h1>
+    <h1>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</h1>
     <label class="logo-upload">Upload Logo
       <input type="file" id="logoInput">
     </label>
@@ -28,7 +28,7 @@
     <h2>Resin Project</h2>
     <div class="grid">
       <label>Project Name<input type="text" id="r-name"></label>
-      <label>Currency<input type="text" id="r-currency" placeholder="PHP" value="PHP"></label>
+      <label>Currency<input type="text" id="r-currency" placeholder="e.g., PHP"></label>
       <label>Resin Bottle Price<input type="number" id="r-bottlePrice" value="1200"></label>
       <label>Bottle Volume (ml)<input type="number" id="r-bottleVolume" value="1000"></label>
       <label>Resin Used (ml)<input type="number" id="r-ml" value="90"></label>
@@ -38,18 +38,18 @@
       <label>Labor Rate<input type="number" id="r-laborRate" value="250"></label>
       <label>Machine Amortization (per hour)<input type="number" id="r-machine" value="60"></label>
       <label>Markup %<input type="number" id="r-markup" value="30"></label>
-      <button id="r-calc" class="btn">Calculate & Add to History</button>
+      <button id="r-calc" class="btn">Calculate</button>
     </div>
     <div id="r-results" class="results"></div>
-    <button id="r-invoice" class="btn">Export Last Resin Invoice</button>
+    <button id="r-invoice" class="btn">Export Invoice</button>
   </div>
 
   <!-- Filament Tab -->
-  <div id="filament" class="tab-panel">
+  <div id="filament" class="tab-panel" style="display:none;">
     <h2>Filament Project</h2>
     <div class="grid">
       <label>Project Name<input type="text" id="f-name"></label>
-      <label>Currency<input type="text" id="f-currency" placeholder="PHP" value="PHP"></label>
+      <label>Currency<input type="text" id="f-currency" placeholder="e.g., PHP"></label>
       <label>Filament Price<input type="number" id="f-price" value="1000"></label>
       <label>Filament Used (g)<input type="number" id="f-used" value="100"></label>
       <label>Print Time (hours)<input type="number" id="f-time" value="7.5"></label>
@@ -58,14 +58,14 @@
       <label>Labor Rate<input type="number" id="f-laborRate" value="250"></label>
       <label>Machine Amortization (per hour)<input type="number" id="f-machine" value="60"></label>
       <label>Markup %<input type="number" id="f-markup" value="30"></label>
-      <button id="f-calc" class="btn">Calculate & Add to History</button>
+      <button id="f-calc" class="btn">Calculate</button>
     </div>
     <div id="f-results" class="results"></div>
-    <button id="f-invoice" class="btn">Export Last Filament Invoice</button>
+    <button id="f-invoice" class="btn">Export Invoice</button>
   </div>
 
   <!-- History Tab -->
-  <div id="history" class="tab-panel">
+  <div id="history" class="tab-panel" style="display:none;">
     <h2>Project History</h2>
     <table id="historyTable">
       <thead>
@@ -86,7 +86,7 @@
         </tr>
       </tfoot>
     </table>
-    <button id="exportHistory" class="btn">Export Full History</button>
+    <button id="exportHistory" class="btn">Export History to Excel</button>
     <button id="clearHistory" class="btn">Clear History</button>
   </div>
 </div>
