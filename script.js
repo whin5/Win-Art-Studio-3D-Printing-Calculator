@@ -1,44 +1,68 @@
-function calculateCost() {
-  const currency = document.getElementById("currency").value;
-  const projectName = document.getElementById("projectName").value;
-  const materialPrice = parseFloat(document.getElementById("materialPrice").value) || 0;
-  const materialUsed = parseFloat(document.getElementById("materialUsed").value) || 0;
-  const printTime = parseFloat(document.getElementById("printTime").value) || 0;
-  const powerDraw = parseFloat(document.getElementById("powerDraw").value) || 0;
-  const electricityRate = parseFloat(document.getElementById("electricityRate").value) || 0;
-  const laborRate = parseFloat(document.getElementById("laborRate").value) || 0;
-  const laborHours = parseFloat(document.getElementById("laborHours").value) || 0;
-  const machinePrice = parseFloat(document.getElementById("machinePrice").value) || 0;
-  const amortYears = parseFloat(document.getElementById("amortYears").value) || 0;
-  const markup = parseFloat(document.getElementById("markup").value) || 0;
+// Tab switching
+document.querySelectorAll(".tab-button").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
 
-  // Material cost
-  let materialCost = (materialPrice / 1000) * materialUsed;
+    button.classList.add("active");
+    document.getElementById(button.dataset.tab).classList.add("active");
+  });
+});
 
-  // Electricity cost
-  let electricityCost = ((powerDraw * printTime) / 1000) * electricityRate;
+// Resin calculation
+function calculateResin() {
+  const currency = document.getElementById("resinCurrency").value;
+  const resinPrice = parseFloat(document.getElementById("resinPrice").value);
+  const resinUsed = parseFloat(document.getElementById("resinUsed").value);
+  const printTime = parseFloat(document.getElementById("resinPrintTime").value);
+  const powerDraw = parseFloat(document.getElementById("resinPowerDraw").value);
+  const electricityRate = parseFloat(document.getElementById("resinElectricity").value);
+  const laborRate = parseFloat(document.getElementById("resinLabor").value);
+  const operatorHours = parseFloat(document.getElementById("resinOperatorHours").value);
+  const machinePrice = parseFloat(document.getElementById("resinMachinePrice").value);
+  const amortizationYears = parseFloat(document.getElementById("resinAmortization").value);
+  const markup = parseFloat(document.getElementById("resinMarkup").value);
 
-  // Labor cost
-  let laborCost = laborRate * laborHours;
+  const materialCost = (resinUsed / 1000) * resinPrice;
+  const electricityCost = (powerDraw * printTime / 1000) * electricityRate;
+  const laborCost = laborRate * operatorHours;
+  const machineHourly = machinePrice / (amortizationYears * 365 * 24);
+  const machineCost = machineHourly * printTime;
 
-  // Machine amortization per hour
-  let totalHours = amortYears * 365 * 24;
-  let amortCost = machinePrice / totalHours * printTime;
+  const baseCost = materialCost + electricityCost + laborCost + machineCost;
+  const finalCost = baseCost * (1 + markup / 100);
 
-  // Total before markup
-  let baseCost = materialCost + electricityCost + laborCost + amortCost;
+  document.getElementById("resinResult").innerHTML = `
+    <strong>Total Cost:</strong> ${currency}${finalCost.toFixed(2)}<br>
+    (Material: ${currency}${materialCost.toFixed(2)}, Electricity: ${currency}${electricityCost.toFixed(2)}, Labor: ${currency}${laborCost.toFixed(2)}, Machine: ${currency}${machineCost.toFixed(2)})
+  `;
+}
 
-  // Final cost with markup
-  let finalCost = baseCost * (1 + markup / 100);
+// Filament calculation
+function calculateFilament() {
+  const currency = document.getElementById("filamentCurrency").value;
+  const filamentPrice = parseFloat(document.getElementById("filamentPrice").value);
+  const filamentUsed = parseFloat(document.getElementById("filamentUsed").value);
+  const printTime = parseFloat(document.getElementById("filamentPrintTime").value);
+  const powerDraw = parseFloat(document.getElementById("filamentPowerDraw").value);
+  const electricityRate = parseFloat(document.getElementById("filamentElectricity").value);
+  const laborRate = parseFloat(document.getElementById("filamentLabor").value);
+  const operatorHours = parseFloat(document.getElementById("filamentOperatorHours").value);
+  const machinePrice = parseFloat(document.getElementById("filamentMachinePrice").value);
+  const amortizationYears = parseFloat(document.getElementById("filamentAmortization").value);
+  const markup = parseFloat(document.getElementById("filamentMarkup").value);
 
-  document.getElementById("result").innerHTML = `
-    <h3>Project: ${projectName}</h3>
-    <p>Material Cost: ${currency} ${materialCost.toFixed(2)}</p>
-    <p>Electricity Cost: ${currency} ${electricityCost.toFixed(2)}</p>
-    <p>Labor Cost: ${currency} ${laborCost.toFixed(2)}</p>
-    <p>Machine Amortization: ${currency} ${amortCost.toFixed(2)}</p>
-    <hr>
-    <p><strong>Total (Before Markup):</strong> ${currency} ${baseCost.toFixed(2)}</p>
-    <p><strong>Final Price (With Markup):</strong> ${currency} ${finalCost.toFixed(2)}</p>
+  const materialCost = (filamentUsed / 1000) * filamentPrice;
+  const electricityCost = (powerDraw * printTime / 1000) * electricityRate;
+  const laborCost = laborRate * operatorHours;
+  const machineHourly = machinePrice / (amortizationYears * 365 * 24);
+  const machineCost = machineHourly * printTime;
+
+  const baseCost = materialCost + electricityCost + laborCost + machineCost;
+  const finalCost = baseCost * (1 + markup / 100);
+
+  document.getElementById("filamentResult").innerHTML = `
+    <strong>Total Cost:</strong> ${currency}${finalCost.toFixed(2)}<br>
+    (Material: ${currency}${materialCost.toFixed(2)}, Electricity: ${currency}${electricityCost.toFixed(2)}, Labor: ${currency}${laborCost.toFixed(2)}, Machine: ${currency}${machineCost.toFixed(2)})
   `;
 }
