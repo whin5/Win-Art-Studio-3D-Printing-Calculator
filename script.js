@@ -1,86 +1,72 @@
-// Tab Switching
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+// Tab switching
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
     document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
 
-    tab.classList.add("active");
-    document.getElementById(tab.dataset.target).classList.add("active");
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
   });
 });
 
-// Project History
-let projectHistory = [];
-let totalIncome = 0;
+// Resin calculator
+function calculateResin() {
+  let name = document.getElementById("resinProjectName").value;
+  let currency = document.getElementById("resinCurrency").value;
+  let price = parseFloat(document.getElementById("resinPrice").value);
+  let used = parseFloat(document.getElementById("resinUsed").value);
+  let time = parseFloat(document.getElementById("resinTime").value);
+  let power = parseFloat(document.getElementById("resinPower").value);
+  let elec = parseFloat(document.getElementById("resinElec").value);
+  let labor = parseFloat(document.getElementById("resinLabor").value);
+  let amort = parseFloat(document.getElementById("resinAmort").value);
+  let machine = parseFloat(document.getElementById("resinMachine").value);
+  let markup = parseFloat(document.getElementById("resinMarkup").value);
 
-function saveProject(type) {
-  const form = document.querySelector(`#${type}-form`);
-  const data = Object.fromEntries(new FormData(form).entries());
+  let materialCost = price * used;
+  let elecCost = (power / 1000) * time * elec;
+  let laborCost = time * labor;
+  let amortCost = amort > 0 ? (machine / (amort * 30 * 24)) * time : 0;
+  let total = materialCost + elecCost + laborCost + amortCost;
+  let finalPrice = total * (1 + markup / 100);
 
-  const materialCost = parseFloat(data.materialPrice) * parseFloat(data.usedMaterial);
-  const electricityCost = (parseFloat(data.printTime) * parseFloat(data.powerDraw) * parseFloat(data.electricityRate)) / 1000;
-  const laborCost = parseFloat(data.laborRate) * (parseFloat(data.printTime) / 60);
-  const amortizationCost = parseFloat(data.machinePrice) / parseFloat(data.machineAmortization);
-  
-  const baseCost = materialCost + electricityCost + laborCost + amortizationCost;
-  const finalCost = baseCost * (1 + parseFloat(data.markup) / 100);
-
-  const project = {
-    name: data.projectName,
-    type,
-    currency: data.currency,
-    total: finalCost.toFixed(2)
-  };
-
-  projectHistory.push(project);
-  totalIncome += finalCost;
-
-  renderHistory();
+  document.getElementById("resinResult").innerHTML = `
+    <h3>${name}</h3>
+    Material Cost: ${currency}${materialCost.toFixed(2)}<br>
+    Electricity Cost: ${currency}${elecCost.toFixed(2)}<br>
+    Labor Cost: ${currency}${laborCost.toFixed(2)}<br>
+    Machine Amortization: ${currency}${amortCost.toFixed(2)}<br>
+    <strong>Total Price: ${currency}${finalPrice.toFixed(2)}</strong>
+  `;
 }
 
-function renderHistory() {
-  const tbody = document.querySelector("#history-body");
-  tbody.innerHTML = "";
-  projectHistory.forEach((proj, i) => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${i+1}</td>
-        <td>${proj.name}</td>
-        <td>${proj.type}</td>
-        <td>${proj.currency} ${proj.total}</td>
-      </tr>
-    `;
-  });
-  document.querySelector("#total-income").innerText = `Total Income: ${projectHistory[0]?.currency || ''} ${totalIncome.toFixed(2)}`;
-}
+// Filament calculator
+function calculateFilament() {
+  let name = document.getElementById("filamentProjectName").value;
+  let currency = document.getElementById("filamentCurrency").value;
+  let price = parseFloat(document.getElementById("filamentPrice").value);
+  let used = parseFloat(document.getElementById("filamentUsed").value);
+  let time = parseFloat(document.getElementById("filamentTime").value);
+  let power = parseFloat(document.getElementById("filamentPower").value);
+  let elec = parseFloat(document.getElementById("filamentElec").value);
+  let labor = parseFloat(document.getElementById("filamentLabor").value);
+  let amort = parseFloat(document.getElementById("filamentAmort").value);
+  let machine = parseFloat(document.getElementById("filamentMachine").value);
+  let markup = parseFloat(document.getElementById("filamentMarkup").value);
 
-// Export History (Summary) to Excel
-function exportHistory() {
-  let csv = "No,Project,Type,Total\n";
-  projectHistory.forEach((proj, i) => {
-    csv += `${i+1},${proj.name},${proj.type},${proj.currency} ${proj.total}\n`;
-  });
-  downloadCSV(csv, "project-history.csv");
-}
+  let materialCost = price * used;
+  let elecCost = (power / 1000) * time * elec;
+  let laborCost = time * labor;
+  let amortCost = amort > 0 ? (machine / (amort * 30 * 24)) * time : 0;
+  let total = materialCost + elecCost + laborCost + amortCost;
+  let finalPrice = total * (1 + markup / 100);
 
-// Export Invoice (Single Client Project)
-function exportInvoice() {
-  if (projectHistory.length === 0) {
-    alert("No projects to export!");
-    return;
-  }
-  const last = projectHistory[projectHistory.length - 1];
-  let csv = `Invoice\nProject,${last.name}\nType,${last.type}\nTotal,${last.currency} ${last.total}\n`;
-  downloadCSV(csv, `${last.name}-invoice.csv`);
-}
-
-// Helper
-function downloadCSV(content, filename) {
-  const blob = new Blob([content], { type: "text/csv" });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  window.URL.revokeObjectURL(url);
+  document.getElementById("filamentResult").innerHTML = `
+    <h3>${name}</h3>
+    Material Cost: ${currency}${materialCost.toFixed(2)}<br>
+    Electricity Cost: ${currency}${elecCost.toFixed(2)}<br>
+    Labor Cost: ${currency}${laborCost.toFixed(2)}<br>
+    Machine Amortization: ${currency}${amortCost.toFixed(2)}<br>
+    <strong>Total Price: ${currency}${finalPrice.toFixed(2)}</strong>
+  `;
 }
