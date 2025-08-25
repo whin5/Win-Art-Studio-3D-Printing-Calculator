@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -40,7 +41,7 @@
       <button id="r-calc" class="btn">Calculate</button>
     </div>
     <div id="r-results" class="results"></div>
-    <button id="r-exportInvoice" class="btn">Export Invoice</button>
+    <button id="r-invoice" class="btn">Export Invoice</button>
   </div>
 
   <!-- Filament Tab -->
@@ -60,7 +61,7 @@
       <button id="f-calc" class="btn">Calculate</button>
     </div>
     <div id="f-results" class="results"></div>
-    <button id="f-exportInvoice" class="btn">Export Invoice</button>
+    <button id="f-invoice" class="btn">Export Invoice</button>
   </div>
 
   <!-- History Tab -->
@@ -73,9 +74,17 @@
           <th>Type</th>
           <th>Total Cost</th>
           <th>Total Income</th>
+          <th>Invoice</th>
         </tr>
       </thead>
       <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">Total Income:</td>
+          <td id="totalIncome">0</td>
+          <td></td>
+        </tr>
+      </tfoot>
     </table>
     <button id="exportHistory" class="btn">Export History to Excel</button>
     <button id="clearHistory" class="btn">Clear History</button>
