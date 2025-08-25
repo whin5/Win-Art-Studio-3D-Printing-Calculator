@@ -1,114 +1,41 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", sans-serif;
   margin: 0;
-  background: #f7f9fc;
-  color: #333;
+  background: #f4f6f8;
+  color: #111;
 }
-
-header {
-  background: #0a2a43;
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: #0b1f3f;
   color: white;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
 }
-
-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.logo-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#logoPreview {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin-top: 10px;
-  background: white;
-  border-radius: 10px;
-}
-
+.header img { height: 50px; border-radius: 8px; }
+h1 { margin: 0; font-size: 20px; }
 .tabs {
   display: flex;
-  margin: 20px;
+  gap: 8px;
+  margin: 16px 24px;
 }
-
-.tab-button {
-  flex: 1;
-  padding: 12px;
-  cursor: pointer;
-  background: #ddd;
-  border: none;
-  transition: background 0.3s;
-}
-
-.tab-button.active {
-  background: #0a2a43;
-  color: white;
-}
-
-.tab-content {
-  display: none;
-  padding: 20px;
-  background: white;
-  margin: 0 20px 20px 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.tab-content.active {
-  display: block;
-}
-
-form input, form button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+.tab {
+  padding: 10px 16px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-form button {
-  background: #0a2a43;
-  color: white;
   border: none;
   cursor: pointer;
+  background: #e0e0e0;
+  font-weight: bold;
 }
-
-form button:hover {
-  background: #074169;
+.tab.active { background: #0b1f3f; color: white; }
+.panel { margin: 16px 24px; padding: 16px; background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  text-align: center;
-}
-
-.summary {
-  margin-top: 15px;
-  font-size: 1.2rem;
-}
-
-button#exportAll {
-  background: #0a2a43;
-  color: white;
-  padding: 12px;
-  border: none;
-  margin-top: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
+input, select, button { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+button { cursor: pointer; background: #0b1f3f; color: white; font-weight: bold; }
+table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+tfoot th { text-align: right; }
