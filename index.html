@@ -16,37 +16,57 @@
     <img id="logoPreview" src="" alt="Company Logo" style="display:none; max-height:50px;">
   </header>
 
-  <div class="project-select">
-    <label>Project Type:
-      <select id="projectType">
-        <option value="resin">Resin</option>
-        <option value="filament">Filament</option>
-      </select>
-    </label>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="resin">Resin</button>
+    <button class="tab-btn" data-tab="filament">Filament</button>
+    <button class="tab-btn" data-tab="history">History</button>
   </div>
 
-  <div id="projectForm" class="form-grid">
-    <label>Project Name<input type="text" id="p-name"></label>
-    <label>Currency<input type="text" id="p-currency" placeholder="e.g., PHP"></label>
-    <label id="resinPriceLabel">Resin Bottle Price<input type="number" id="p-price" value="1200"></label>
-    <label id="resinVolumeLabel">Bottle Volume (ml)<input type="number" id="p-volume" value="1000"></label>
-    <label>Material Used (ml/g)<input type="number" id="p-used" value="90"></label>
-    <label>Print Time (hours)<input type="number" id="p-time" value="7.5"></label>
-    <label>Electricity Rate<input type="number" id="p-kwh" value="12"></label>
-    <label>Labor Rate<input type="number" id="p-laborRate" value="250"></label>
-    <label>Machine Amortization (per hour)<input type="number" id="p-machine" value="60"></label>
-    <label>Markup %<input type="number" id="p-markup" value="30"></label>
-    <button id="calculateBtn" class="btn">Calculate & Generate Invoice</button>
+  <!-- Resin Tab -->
+  <div id="resin" class="tab-panel">
+    <h2>Resin Project</h2>
+    <div class="grid">
+      <label>Project Name<input type="text" id="r-name"></label>
+      <label>Currency<input type="text" id="r-currency" placeholder="e.g., PHP"></label>
+      <label>Resin Bottle Price<input type="number" id="r-bottlePrice" value="1200"></label>
+      <label>Bottle Volume (ml)<input type="number" id="r-bottleVolume" value="1000"></label>
+      <label>Resin Used (ml)<input type="number" id="r-ml" value="90"></label>
+      <label>Print Time (hours)<input type="number" id="r-time" value="7.5"></label>
+      <label>Printer Power Draw (W)<input type="number" id="r-watts" value="70"></label>
+      <label>Electricity Rate<input type="number" id="r-kwh" value="12"></label>
+      <label>Labor Rate<input type="number" id="r-laborRate" value="250"></label>
+      <label>Machine Amortization (per hour)<input type="number" id="r-machine" value="60"></label>
+      <label>Markup %<input type="number" id="r-markup" value="30"></label>
+      <button id="r-calc" class="btn">Calculate</button>
+    </div>
+    <div id="r-results" class="results"></div>
   </div>
 
-  <div id="results" class="results"></div>
+  <!-- Filament Tab -->
+  <div id="filament" class="tab-panel" style="display:none;">
+    <h2>Filament Project</h2>
+    <div class="grid">
+      <label>Project Name<input type="text" id="f-name"></label>
+      <label>Currency<input type="text" id="f-currency" placeholder="e.g., PHP"></label>
+      <label>Filament Price<input type="number" id="f-price" value="1000"></label>
+      <label>Filament Used (g)<input type="number" id="f-used" value="100"></label>
+      <label>Print Time (hours)<input type="number" id="f-time" value="7.5"></label>
+      <label>Printer Power Draw (W)<input type="number" id="f-watts" value="70"></label>
+      <label>Electricity Rate<input type="number" id="f-kwh" value="12"></label>
+      <label>Labor Rate<input type="number" id="f-laborRate" value="250"></label>
+      <label>Machine Amortization (per hour)<input type="number" id="f-machine" value="60"></label>
+      <label>Markup %<input type="number" id="f-markup" value="30"></label>
+      <button id="f-calc" class="btn">Calculate</button>
+    </div>
+    <div id="f-results" class="results"></div>
+  </div>
 
-  <hr>
-
-  <div id="historySection">
+  <!-- History Tab -->
+  <div id="history" class="tab-panel" style="display:none;">
     <h2>Project History</h2>
     <input type="file" id="importHistoryInput" accept=".csv">
     <button id="exportHistory" class="btn">Export History to Excel</button>
+    <button id="clearHistory" class="btn" style="background:#cc0000;">Clear History</button>
     <table id="historyTable">
       <thead>
         <tr>
