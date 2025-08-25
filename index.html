@@ -1,99 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Win Art Studio: 3D Printing Calculator + Income Tracker + Invoice</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --card-bg: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #3b82f6;
+      --accent-light: #60a5fa;
+      --border: #d1d5db;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", sans-serif; }
+    body { background: var(--bg); color: var(--text); }
+    .container { max-width: 1200px; margin: 20px auto; padding: 16px; }
+    h1 { margin-bottom: 12px; color: var(--accent); }
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-button { padding: 10px 16px; border: 1px solid var(--border); background: var(--card-bg); cursor: pointer; border-radius: 6px; }
+    .tab-button.active { background: var(--accent); color: #fff; border-color: var(--accent-light); }
+    .tab-content { display: none; background: var(--card-bg); padding: 16px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .tab-content.active { display: block; }
+    label { display: block; margin-top: 12px; font-size: 14px; color: var(--text); }
+    input, select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid var(--border); border-radius: 6px; }
+    button { margin-top: 12px; padding: 10px 16px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border: 1px solid var(--border); padding: 8px; text-align: left; }
+    th { background: var(--accent-light); color: #fff; }
+    .history-table { max-height: 250px; overflow-y: auto; display: block; }
+    .flex { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .logo-preview { max-height: 60px; margin-bottom: 12px; }
+  </style>
 </head>
 <body>
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const tabs = document.querySelectorAll(".tab-button");
-      const contents = document.querySelectorAll(".tab-content");
+<div class="container">
+  <h1>Win Art Studio: 3D Printing Calculator + Income Tracker + Invoice</h1>
 
-      tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-          tabs.forEach(t => t.classList.remove("active"));
-          contents.forEach(c => c.classList.remove("active"));
+  <label>Upload Logo:</label>
+  <input type="file" id="logoUpload" accept="image/*" />
+  <img id="logoPreview" class="logo-preview" src="" alt="Logo Preview" />
 
-          tab.classList.add("active");
-          document.getElementById(tab.dataset.tab).classList.add("active");
-        });
-      });
-    });
-  </script>
-  <header>
-    <div class="logo-container">
-      <input type="file" id="logoUpload" accept="image/*">
-      <img id="logoPreview" alt="Logo Preview">
-    </div>
-    <h1>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</h1>
-  </header>
+  <div class="tabs">
+    <button class="tab-button active" data-tab="filament">Filament</button>
+    <button class="tab-button" data-tab="resin">Resin</button>
+    <button class="tab-button" data-tab="history">History</button>
+  </div>
 
-  <main>
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab-button active" data-tab="resin">Resin Projects</button>
-      <button class="tab-button" data-tab="filament">Filament Projects</button>
-    </div>
+  <div id="filament" class="tab-content active">
+    <h3>Filament Project</h3>
+    <label>Project Name</label><input id="f-name" />
+    <label>Currency</label><input id="f-currency" value="PHP" />
+    <label>Material Price (per kg)</label><input id="f-price" type="number" value="900" />
+    <label>Material Used (grams)</label><input id="f-used" type="number" value="100" />
+    <label>Print Time (hours)</label><input id="f-time" type="number" value="6" />
+    <label>Power Draw (W)</label><input id="f-power" type="number" value="120" />
+    <label>Electricity Rate (per kWh)</label><input id="f-kwh" type="number" value="12" />
+    <label>Labor Rate (per hour)</label><input id="f-labor" type="number" value="200" />
+    <label>Machine Amortization (per hour)</label><input id="f-machine" type="number" value="50" />
+    <label>Markup (%)</label><input id="f-markup" type="number" value="30" />
+    <button onclick="calculate('filament')">Calculate & Save</button>
+    <div id="f-result"></div>
+  </div>
 
-    <!-- Resin Form -->
-    <div class="tab-content active" id="resin">
-      <h2>Resin Project</h2>
-      <form id="resinForm">
-        <input type="text" placeholder="Project Name" id="resinName" required>
-        <input type="number" placeholder="Material Used (ml or g)" id="resinUsed" required>
-        <input type="number" placeholder="Material Price per ml/g" id="resinPrice" required>
-        <input type="number" placeholder="Print Time (hours)" id="resinTime">
-        <input type="number" placeholder="Power Draw (W)" id="resinPower">
-        <input type="number" placeholder="Electricity Rate per kWh" id="resinRate">
-        <input type="number" placeholder="Labor Rate per hour" id="resinLabor">
-        <input type="number" placeholder="Machine Price (Amortization)" id="resinMachine">
-        <input type="number" placeholder="Markup %" id="resinMarkup">
-        <button type="submit">Save Resin Project</button>
-      </form>
-    </div>
+  <div id="resin" class="tab-content">
+    <h3>Resin Project</h3>
+    <label>Project Name</label><input id="r-name" />
+    <label>Currency</label><input id="r-currency" value="PHP" />
+    <label>Resin Price (per liter)</label><input id="r-price" type="number" value="1200" />
+    <label>Resin Used (ml)</label><input id="r-used" type="number" value="90" />
+    <label>Print Time (hours)</label><input id="r-time" type="number" value="7" />
+    <label>Power Draw (W)</label><input id="r-power" type="number" value="70" />
+    <label>Electricity Rate (per kWh)</label><input id="r-kwh" type="number" value="12" />
+    <label>Labor Rate (per hour)</label><input id="r-labor" type="number" value="250" />
+    <label>Machine Amortization (per hour)</label><input id="r-machine" type="number" value="60" />
+    <label>Markup (%)</label><input id="r-markup" type="number" value="30" />
+    <button onclick="calculate('resin')">Calculate & Save</button>
+    <div id="r-result"></div>
+  </div>
 
-    <!-- Filament Form -->
-    <div class="tab-content" id="filament">
-      <h2>Filament Project</h2>
-      <form id="filamentForm">
-        <input type="text" placeholder="Project Name" id="filamentName" required>
-        <input type="number" placeholder="Material Used (g)" id="filamentUsed" required>
-        <input type="number" placeholder="Material Price per g" id="filamentPrice" required>
-        <input type="number" placeholder="Print Time (hours)" id="filamentTime">
-        <input type="number" placeholder="Power Draw (W)" id="filamentPower">
-        <input type="number" placeholder="Electricity Rate per kWh" id="filamentRate">
-        <input type="number" placeholder="Labor Rate per hour" id="filamentLabor">
-        <input type="number" placeholder="Machine Price (Amortization)" id="filamentMachine">
-        <input type="number" placeholder="Markup %" id="filamentMarkup">
-        <button type="submit">Save Filament Project</button>
-      </form>
-    </div>
-
-    <!-- Project History -->
-    <section>
-      <h2>Project History</h2>
+  <div id="history" class="tab-content">
+    <h3>Project History</h3>
+    <button onclick="exportHistory()">Export All to Excel</button>
+    <div class="history-table">
       <table id="historyTable">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Project Name</th>
             <th>Type</th>
             <th>Total Cost</th>
-            <th>Income</th>
+            <th>Total Income</th>
             <th>Export Invoice</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
-      <div class="summary">
-        <p><strong>Total Income Summary: </strong><span id="totalIncome">₱0</span></p>
-      </div>
-      <button id="exportAll">Export All History to Excel</button>
-    </section>
-  </main>
+    </div>
+  </div>
+</div>
 
-  <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+  const tabs = document.querySelectorAll(".tab-button");
+  const contents = document.querySelectorAll(".tab-content");
+  const history = JSON.parse(localStorage.getItem("projects") || "[]");
+
+  // Tab switching
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      contents.forEach(c => c.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById(tab.dataset.tab).classList.add("active");
+      loadHistory();
+    });
+  });
+
+  // Logo upload
+  const logoInput = document.getElementById("logoUpload");
+  const logoPreview = document.getElementById("logoPreview");
+  logoInput.addEventListener("change", e => {
+    const reader = new FileReader();
+    reader.onload = ev => logoPreview.src = ev.target.result;
+    reader.readAsDataURL(e.target.files[0]);
+  });
+
+  function calculate(type) {
+    let project = {};
+    if (type === "filament") {
+      const used = parseFloat(document.getElementById("f-used").value) || 0;
+      const price = parseFloat(document.getElementById("f-price").value) || 0;
+      const time = parseFloat(document.getElementById("f-time").value) || 0;
+      const power = parseFloat(document.getElementById("f-power").value) || 0;
+      const kwh = parseFloat(document.getElementById("f-kwh").value) || 0;
+      const labor = parseFloat(document.getElementById("f-labor").value) || 0;
+      const machine = parseFloat(document.getElementById("f-machine").value) || 0;
+      const markup = parseFloat(document.getElementById("f-markup").value) || 0;
+
+      const materialCost = (used / 1000) * price;
+      const electricityCost = (power * time / 1000) * kwh;
+      const laborCost = labor * time;
+      const machineCost = machine * time;
+      const subtotal = materialCost + electricityCost + laborCost + machineCost;
+      const total = subtotal * (1 + markup/100);
+
+      project = {
+        name: document.getElementById("f-name").value,
+        type: "Filament",
+        totalCost: subtotal.toFixed(2),
+        totalIncome: total.toFixed(2),
+      };
+      document.getElementById("f-result").innerHTML = `Total: ${total.toFixed(2)}`;
+    } else {
+      const used = parseFloat(document.getElementById("r-used").value) || 0;
+      const price = parseFloat(document.getElementById("r-price").value) || 0;
+      const time = parseFloat(document.getElementById("r-time").value) || 0;
+      const power = parseFloat(document.getElementById("r-power").value) || 0;
+      const kwh = parseFloat(document.getElementById("r-kwh").value) || 0;
+      const labor = parseFloat(document.getElementById("r-labor").value) || 0;
+      const machine = parseFloat(document.getElementById("r-machine").value) || 0;
+      const markup = parseFloat(document.getElementById("r-markup").value) || 0;
+
+      const materialCost = (used / 1000) * price;
+      const electricityCost = (power * time / 1000) * kwh;
+      const laborCost = labor * time;
+      const machineCost = machine * time;
+      const subtotal = materialCost + electricityCost + laborCost + machineCost;
+      const total = subtotal * (1 + markup/100);
+
+      project = {
+        name: document.getElementById("r-name").value,
+        type: "Resin",
+        totalCost: subtotal.toFixed(2),
+        totalIncome: total.toFixed(2),
+      };
+      document.getElementById("r-result").innerHTML = `Total: ${total.toFixed(2)}`;
+    }
+
+    history.push(project);
+    localStorage.setItem("projects", JSON.stringify(history));
+    loadHistory();
+  }
+
+  function loadHistory() {
+    const tbody = document.querySelector("#historyTable tbody");
+    tbody.innerHTML = "";
+    history.forEach((p, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${p.name}</td>
+        <td>${p.type}</td>
+        <td>${p.totalCost}</td>
+        <td>${p.totalIncome}</td>
+        <td><button onclick="exportInvoice(${i})">Export</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function exportHistory() {
+    const ws = XLSX.utils.json_to_sheet(history);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Summary");
+    XLSX.writeFile(wb, "project_history.xlsx");
+  }
+
+  function exportInvoice(index) {
+    const p = history[index];
+    const ws = XLSX.utils.json_to_sheet([p]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Invoice");
+    XLSX.writeFile(wb, `${p.name}_invoice.xlsx`);
+  }
+
+  loadHistory();
+</script>
 </body>
 </html>
