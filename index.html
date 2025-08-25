@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Win Art Studio: 3D Printing Calculator & Income Tracker + Invoice</title>
+<title>Win Art Studio: 3D Printing Calculator & Income Tracker</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div class="container">
   <header>
     <div class="logo-upload">
-      <label>Upload Logo:
-        <input type="file" id="logo-upload" accept="image/*">
-      </label>
-      <img id="logo-preview" src="" alt="Logo Preview" />
+      <input type="file" id="logoInput" accept="image/*">
+      <img id="logoPreview" src="" alt="Logo Preview">
     </div>
-    <h1>Win Art Studio: 3D Printing Calculator & Income Tracker + Invoice</h1>
+    <h1>Win Art Studio: 3D Printing Calculator & Income Tracker</h1>
   </header>
 
   <div class="tabs">
@@ -24,101 +23,57 @@
     <button class="tab" data-tab="history">History</button>
   </div>
 
-  <!-- Filament Tab -->
-  <div class="tab-panel" id="filament-panel">
+  <div id="panel-filament" class="tab-panel">
+    <h2>Filament Project</h2>
     <div class="grid">
-      <label>Project Name</label>
-      <input id="f-name" placeholder="e.g., PLA Gear Prototype">
-
-      <label>Currency</label>
-      <input id="f-currency" placeholder="PHP, USD etc." value="PHP">
-
-      <label>Material Price (per kg)</label>
-      <input id="f-price" type="number" value="900">
-
-      <label>Material Used (grams)</label>
-      <input id="f-used" type="number" value="120">
-
-      <label>Print Time (hours)</label>
-      <input id="f-time" type="number" value="6">
-
-      <label>Printer Power Draw (W)</label>
-      <input id="f-watts" type="number" value="120">
-
-      <label>Electricity Rate</label>
-      <input id="f-kwh" type="number" value="12">
-
-      <label>Labor Rate</label>
-      <input id="f-labor" type="number" value="200">
-
-      <label>Machine Amortization</label>
-      <input id="f-machine" type="number" value="50">
-
-      <label>Markup (%)</label>
-      <input id="f-markup" type="number" value="30">
-
-      <button id="f-calc" class="btn primary">Calculate & Save</button>
+      <label>Project Name<input type="text" id="f-name"></label>
+      <label>Currency<input type="text" id="f-currency" placeholder="e.g., PHP"></label>
+      <label>Material Price (per kg)<input type="number" id="f-priceKg" value="900"></label>
+      <label>Material Used (grams)<input type="number" id="f-grams" value="120"></label>
+      <label>Print Time (hours)<input type="number" id="f-time" value="6"></label>
+      <label>Printer Power Draw (W)<input type="number" id="f-watts" value="120"></label>
+      <label>Electricity Rate<input type="number" id="f-kwh" value="12"></label>
+      <label>Labor Rate<input type="number" id="f-laborRate" value="200"></label>
+      <label>Machine Amortization (per hour)<input type="number" id="f-machine" value="50"></label>
+      <label>Markup %<input type="number" id="f-markup" value="30"></label>
+      <button id="f-calc" class="btn">Calculate</button>
     </div>
     <div id="f-results" class="results"></div>
   </div>
 
-  <!-- Resin Tab -->
-  <div class="tab-panel" id="resin-panel" style="display:none">
+  <div id="panel-resin" class="tab-panel" style="display:none">
+    <h2>Resin Project</h2>
     <div class="grid">
-      <label>Project Name</label>
-      <input id="r-name" placeholder="e.g., Resin Head Sculpt">
-
-      <label>Currency</label>
-      <input id="r-currency" placeholder="PHP, USD etc." value="PHP">
-
-      <label>Resin Price (per liter)</label>
-      <input id="r-price" type="number" value="1200">
-
-      <label>Resin Used (ml)</label>
-      <input id="r-used" type="number" value="90">
-
-      <label>Print Time (hours)</label>
-      <input id="r-time" type="number" value="7.5">
-
-      <label>Printer Power Draw (W)</label>
-      <input id="r-watts" type="number" value="70">
-
-      <label>Electricity Rate</label>
-      <input id="r-kwh" type="number" value="12">
-
-      <label>Labor Rate</label>
-      <input id="r-labor" type="number" value="250">
-
-      <label>Machine Amortization</label>
-      <input id="r-machine" type="number" value="60">
-
-      <label>Markup (%)</label>
-      <input id="r-markup" type="number" value="30">
-
-      <button id="r-calc" class="btn primary">Calculate & Save</button>
+      <label>Project Name<input type="text" id="r-name"></label>
+      <label>Currency<input type="text" id="r-currency" placeholder="e.g., PHP"></label>
+      <label>Resin Price (per ml)<input type="number" id="r-price" value="1.2"></label>
+      <label>Resin Used (ml)<input type="number" id="r-ml" value="90"></label>
+      <label>Print Time (hours)<input type="number" id="r-time" value="7.5"></label>
+      <label>Printer Power Draw (W)<input type="number" id="r-watts" value="70"></label>
+      <label>Electricity Rate<input type="number" id="r-kwh" value="12"></label>
+      <label>Labor Rate<input type="number" id="r-laborRate" value="250"></label>
+      <label>Machine Amortization (per hour)<input type="number" id="r-machine" value="60"></label>
+      <label>Markup %<input type="number" id="r-markup" value="30"></label>
+      <button id="r-calc" class="btn">Calculate</button>
     </div>
     <div id="r-results" class="results"></div>
   </div>
 
-  <!-- History Tab -->
-  <div class="tab-panel" id="history-panel" style="display:none">
+  <div id="panel-history" class="tab-panel" style="display:none">
     <h2>Project History</h2>
-    <button id="export-summary" class="btn">Export All to Excel</button>
-    <table id="history-table">
+    <button id="exportHistory" class="btn">Export History to Excel</button>
+    <table id="historyTable">
       <thead>
         <tr>
-          <th>Type</th>
           <th>Project Name</th>
+          <th>Type</th>
           <th>Total Cost</th>
           <th>Total Income</th>
-          <th>Export Invoice</th>
+          <th>Invoice</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
-    <div class="total-income">
-      <strong>Total Income Overall:</strong> <span id="total-income">0</span>
-    </div>
   </div>
 </div>
 
