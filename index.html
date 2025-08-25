@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -13,7 +14,7 @@
     <label class="logo-upload">Upload Logo
       <input type="file" id="logoInput">
     </label>
-    <img id="logoPreview" src="" alt="Company Logo" style="display:none;">
+    <img id="logoPreview" src="" alt="Company Logo" style="display:none; max-height:50px;">
   </header>
 
   <div class="tabs">
@@ -76,13 +77,11 @@
       </thead>
       <tbody></tbody>
     </table>
-    <div class="history-actions">
+    <div class="history-buttons">
       <button id="exportHistory" class="btn">Export History to Excel</button>
-      <button id="importHistory" class="btn">Import History CSV</button>
+      <button id="importHistory" class="btn">Import History</button>
       <button id="clearHistory" class="btn">Clear History</button>
     </div>
-    <p id="totalIncome">Total Income: 0</p>
-    <input type="file" id="importFile" style="display:none;">
   </div>
 </div>
 
