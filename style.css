@@ -33,30 +33,6 @@ header h1 {
   border-radius: 5px;
 }
 
-.tabs {
-  display: flex;
-  margin-bottom: 20px;
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 10px 0;
-  cursor: pointer;
-  border: none;
-  background-color: #e9ecef;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.tab-btn.active {
-  background-color: #007bff;
-  color: white;
-}
-
-.tab-btn:hover:not(.active) {
-  background-color: #ced4da;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
@@ -71,7 +47,7 @@ header h1 {
   font-size: 0.9rem;
 }
 
-input {
+input, select {
   padding: 6px;
   margin-top: 4px;
   border: 1px solid #ced4da;
