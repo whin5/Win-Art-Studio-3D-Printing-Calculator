@@ -1,107 +1,123 @@
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f6fa;
-  color: #333;
-  margin: 0;
+// Tab Switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    document.getElementById(tab).style.display = 'block';
+  });
+});
+
+// Logo Upload Preview
+document.getElementById('logoInput').addEventListener('change', function() {
+  const file = this.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.getElementById('logoPreview');
+      img.src = e.target.result;
+      img.style.display = 'block';
+    }
+    reader.readAsDataURL(file);
+  }
+});
+
+// History Data
+let historyData = JSON.parse(localStorage.getItem('projects')) || [];
+
+// Update History Table
+function updateHistory() {
+    const tbody = document.querySelector('#historyTable tbody');
+    tbody.innerHTML = '';
+    let totalIncome = 0;
+    historyData.forEach((p, i) => {
+        totalIncome += p.totalIncome;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${p.name}</td>
+                        <td>${p.type}</td>
+                        <td>${p.totalCost.toFixed(2)}</td>
+                        <td>${p.totalIncome.toFixed(2)}</td>
+                        <td><button onclick="exportInvoice(${i})">Invoice</button></td>`;
+        tbody.appendChild(tr);
+    });
+    document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
 }
 
-.container {
-  width: 95%;
-  max-width: 1200px;
-  margin: 20px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+// Export individual invoice
+function exportInvoice(index) {
+    const project = historyData[index];
+    const wb = XLSX.utils.book_new();
+    const wsData = [
+        ['Project Name', project.name],
+        ['Type', project.type],
+        ['Total Cost', project.totalCost.toFixed(2)],
+        ['Total Income', project.totalIncome.toFixed(2)]
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, 'Invoice');
+    XLSX.writeFile(wb, `${project.name}_Invoice.xlsx`);
 }
 
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+// Resin Calculation
+function calculateResin() {
+    const name = document.getElementById('r-name').value;
+    const currency = document.getElementById('r-currency').value || 'PHP';
+    const bottlePrice = parseFloat(document.getElementById('r-bottlePrice').value);
+    const bottleVolume = parseFloat(document.getElementById('r-bottleVolume').value);
+    const mlUsed = parseFloat(document.getElementById('r-ml').value);
+    const hours = parseFloat(document.getElementById('r-time').value);
+    const watts = parseFloat(document.getElementById('r-watts').value);
+    const kwh = parseFloat(document.getElementById('r-kwh').value);
+    const laborRate = parseFloat(document.getElementById('r-laborRate').value);
+    const machineRate = parseFloat(document.getElementById('r-machine').value);
+    const markup = parseFloat(document.getElementById('r-markup').value);
+
+    const materialCost = (bottlePrice / bottleVolume) * mlUsed;
+    const electricityCost = (watts * hours / 1000) * kwh;
+    const laborCost = hours * laborRate;
+    const machineCost = hours * machineRate;
+    const totalCost = materialCost + electricityCost + laborCost + machineCost;
+    const totalIncome = totalCost * (1 + markup / 100);
+
+    document.getElementById('r-results').innerHTML = `
+        Material: ${currency} ${materialCost.toFixed(2)}<br>
+        Electricity: ${currency} ${electricityCost.toFixed(2)}<br>
+        Labor: ${currency} ${laborCost.toFixed(2)}<br>
+        Machine: ${currency} ${machineCost.toFixed(2)}<br>
+        Total Cost: ${currency} ${totalCost.toFixed(2)}<br>
+        Total Income: ${currency} ${totalIncome.toFixed(2)}
+    `;
+
+    const project = { name, type: 'Resin', totalCost, totalIncome, currency };
+    historyData.push(project);
+    localStorage.setItem('projects', JSON.stringify(historyData));
+    updateHistory();
 }
 
-header h1 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
+// Filament Calculation
+function calculateFilament() {
+    const name = document.getElementById('f-name').value;
+    const currency = document.getElementById('f-currency').value || 'PHP';
+    const price = parseFloat(document.getElementById('f-price').value);
+    const used = parseFloat(document.getElementById('f-used').value);
+    const hours = parseFloat(document.getElementById('f-time').value);
+    const watts = parseFloat(document.getElementById('f-watts').value);
+    const kwh = parseFloat(document.getElementById('f-kwh').value);
+    const laborRate = parseFloat(document.getElementById('f-laborRate').value);
+    const machineRate = parseFloat(document.getElementById('f-machine').value);
+    const markup = parseFloat(document.getElementById('f-markup').value);
 
-.logo-upload input {
-  display: none;
-}
+    const materialCost = (price / 1000) * used;
+    const electricityCost = (watts * hours / 1000) * kwh;
+    const laborCost = hours * laborRate;
+    const machineCost = hours * machineRate;
+    const totalCost = materialCost + electricityCost + laborCost + machineCost;
+    const totalIncome = totalCost * (1 + markup / 100);
 
-.tabs {
-  margin-top: 20px;
-}
-
-.tab-btn {
-  padding: 10px 20px;
-  margin-right: 5px;
-  background-color: #dcdde1;
-  border: none;
-  border-radius: 8px 8px 0 0;
-  cursor: pointer;
-}
-
-.tab-btn.active {
-  background-color: #0097e6;
-  color: #fff;
-}
-
-.tab-panel {
-  border: 1px solid #dcdde1;
-  border-top: none;
-  padding: 20px;
-  display: block;
-  border-radius: 0 0 12px 12px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-}
-
-input {
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.btn {
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #0097e6;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.results {
-  margin-top: 15px;
-  padding: 10px;
-  background: #f1f2f6;
-  border-radius: 8px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-table, th, td {
-  border: 1px solid #333;
-}
-
-th, td {
-  padding: 8px;
-  text-align: center;
-}
+    document.getElementById('f-results').innerHTML = `
+        Material: ${currency} ${materialCost.toFixed(2)}<br>
+        Electricity: ${currency} ${electricityCost.toFixed(2)}<br>
+        Labor: ${currency} ${laborCost.toFixed(2)}<br>
+        Machine: ${currency} ${machineCost.toFixed(2)}<br>
+        Total Cost: ${currency} ${totalCost.toFixed(2)}<br>
