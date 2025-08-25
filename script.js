@@ -1,12 +1,8 @@
-// Tab switching
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tab = btn.dataset.tab;
-    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
-    document.getElementById(tab).style.display = 'block';
-  });
+// Show/hide inputs based on project type
+document.getElementById('projectType').addEventListener('change', e => {
+  const type = e.target.value;
+  document.getElementById('resinInputs').style.display = (type==='resin')?'block':'none';
+  document.getElementById('filamentInputs').style.display = (type==='filament')?'block':'none';
 });
 
 // Logo preview
@@ -25,6 +21,7 @@ document.getElementById('logoInput').addEventListener('change', e => {
 
 // Project History
 let history = JSON.parse(localStorage.getItem('projects')) || [];
+let lastProject = null;
 
 function updateHistoryTable() {
   const tbody = document.querySelector('#historyTable tbody');
@@ -40,7 +37,48 @@ function updateHistoryTable() {
 }
 updateHistoryTable();
 
-// Export to Excel (history)
+// Calculate button
+document.getElementById('calc').addEventListener('click', () => {
+  const type = document.getElementById('projectType').value;
+  const name = document.getElementById('name').value;
+  const currency = document.getElementById('currency').value || '';
+  const time = Number(document.getElementById('time').value);
+  const watts = Number(document.getElementById('watts').value);
+  const kwh = Number(document.getElementById('kwh').value);
+  const labor = Number(document.getElementById('laborRate').value);
+  const machine = Number(document.getElementById('machine').value);
+  const markup = Number(document.getElementById('markup').value);
+
+  let materialCost = 0;
+
+  if(type==='resin'){
+    const bottlePrice = Number(document.getElementById('r-bottlePrice').value);
+    const bottleVol = Number(document.getElementById('r-bottleVolume').value);
+    const used = Number(document.getElementById('r-ml').value);
+    materialCost = bottlePrice * used / bottleVol;
+  } else {
+    const price = Number(document.getElementById('f-price').value);
+    const used = Number(document.getElementById('f-used').value);
+    materialCost = price * used / 1000;
+  }
+
+  const electricity = (watts/1000)*time*kwh;
+  const laborCost = labor + machine + electricity;
+  const totalCost = materialCost + laborCost;
+  const totalIncome = totalCost*(1+markup/100);
+
+  document.getElementById('results').innerHTML = `
+    Total Cost: ${currency} ${totalCost.toFixed(2)}<br>
+    Total Income: ${currency} ${totalIncome.toFixed(2)}
+  `;
+
+  lastProject = {name,type,currency,totalCost:totalCost.toFixed(2),totalIncome:totalIncome.toFixed(2)};
+  history.push(lastProject);
+  localStorage.setItem('projects', JSON.stringify(history));
+  updateHistoryTable();
+});
+
+// Export History to CSV
 document.getElementById('exportHistory').addEventListener('click', () => {
   let csv = 'Project Name,Type,Total Cost,Total Income\n';
   history.forEach(p => {
@@ -55,61 +93,24 @@ document.getElementById('exportHistory').addEventListener('click', () => {
   URL.revokeObjectURL(url);
 });
 
-// Simple calculate & save for Resin
-document.getElementById('r-calc').addEventListener('click', () => {
-  const name = document.getElementById('r-name').value;
-  const currency = document.getElementById('r-currency').value || '';
-  const bottlePrice = Number(document.getElementById('r-bottlePrice').value);
-  const bottleVol = Number(document.getElementById('r-bottleVolume').value);
-  const used = Number(document.getElementById('r-ml').value);
-  const time = Number(document.getElementById('r-time').value);
-  const watts = Number(document.getElementById('r-watts').value);
-  const kwh = Number(document.getElementById('r-kwh').value);
-  const labor = Number(document.getElementById('r-laborRate').value);
-  const machine = Number(document.getElementById('r-machine').value);
-  const markup = Number(document.getElementById('r-markup').value);
+// Export last project invoice
+document.getElementById('exportInvoice').addEventListener('click', () => {
+  if(!lastProject) {
+    alert('No project calculated yet!');
+    return;
+  }
 
-  const resinCost = (bottlePrice * used / bottleVol);
-  const electricity = (watts/1000)*time*kwh;
-  const laborCost = labor + machine + electricity; // summarized
-  const totalCost = resinCost + laborCost;
-  const totalIncome = totalCost * (1 + markup/100);
+  let csv = `Company Name,Win Art Studio\n`;
+  csv += `Project Name,${lastProject.name}\n`;
+  csv += `Project Type,${lastProject.type}\n`;
+  csv += `Total Cost,${lastProject.currency} ${lastProject.totalCost}\n`;
+  csv += `Total Income,${lastProject.currency} ${lastProject.totalIncome}\n`;
 
-  document.getElementById('r-results').innerHTML = `
-    Total Cost: ${currency} ${totalCost.toFixed(2)}<br>
-    Total Income: ${currency} ${totalIncome.toFixed(2)}
-  `;
-
-  history.push({name,type:'Resin',totalCost:totalCost.toFixed(2),totalIncome:totalIncome.toFixed(2)});
-  localStorage.setItem('projects', JSON.stringify(history));
-  updateHistoryTable();
-});
-
-// Simple calculate & save for Filament
-document.getElementById('f-calc').addEventListener('click', () => {
-  const name = document.getElementById('f-name').value;
-  const currency = document.getElementById('f-currency').value || '';
-  const price = Number(document.getElementById('f-price').value);
-  const used = Number(document.getElementById('f-used').value);
-  const time = Number(document.getElementById('f-time').value);
-  const watts = Number(document.getElementById('f-watts').value);
-  const kwh = Number(document.getElementById('f-kwh').value);
-  const labor = Number(document.getElementById('f-laborRate').value);
-  const machine = Number(document.getElementById('f-machine').value);
-  const markup = Number(document.getElementById('f-markup').value);
-
-  const materialCost = price*used/1000;
-  const electricity = (watts/1000)*time*kwh;
-  const laborCost = labor + machine + electricity; // summarized
-  const totalCost = materialCost + laborCost;
-  const totalIncome = totalCost*(1+markup/100);
-
-  document.getElementById('f-results').innerHTML = `
-    Total Cost: ${currency} ${totalCost.toFixed(2)}<br>
-    Total Income: ${currency} ${totalIncome.toFixed(2)}
-  `;
-
-  history.push({name,type:'Filament',totalCost:totalCost.toFixed(2),totalIncome:totalIncome.toFixed(2)});
-  localStorage.setItem('projects', JSON.stringify(history));
-  updateHistoryTable();
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${lastProject.name}_invoice.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 });
