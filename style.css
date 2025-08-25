@@ -1,99 +1,86 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
   margin: 0;
   padding: 0;
 }
-
 .container {
-  max-width: 1100px;
-  margin: 20px auto;
+  max-width: 1000px;
+  margin: auto;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  background: #fff;
   border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
-
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
 header h1 {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  margin: 0;
 }
-
 .logo-upload input {
   display: none;
 }
-
 .logo-upload {
-  display: inline-block;
-  margin-bottom: 10px;
   cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  padding: 6px 12px;
+  background: #0052cc;
+  color: #fff;
+  padding: 5px 10px;
   border-radius: 5px;
 }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-  gap: 15px;
-  margin-bottom: 15px;
+.project-select {
+  margin-bottom: 20px;
 }
-
-.grid label {
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+label {
   display: flex;
   flex-direction: column;
-  font-weight: bold;
-  font-size: 0.9rem;
+  font-weight: 500;
 }
-
-input, select {
-  padding: 6px;
-  margin-top: 4px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
+input, select, button {
+  padding: 5px 10px;
+  font-size: 1rem;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
-
-.btn {
-  padding: 8px 15px;
+button.btn {
+  background: #0052cc;
+  color: #fff;
   border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
   cursor: pointer;
-  margin-top: 10px;
 }
-
-.btn:hover {
-  background-color: #0056b3;
+button.btn:hover {
+  background: #003d99;
 }
-
 .results {
-  padding: 10px;
-  border: 1px solid #ced4da;
+  background: #e6f0ff;
+  padding: 15px;
   border-radius: 5px;
-  margin-top: 10px;
-  background-color: #f1f3f5;
+  margin-bottom: 20px;
 }
-
-table {
+#historyTable {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
-
-th, td {
-  padding: 10px;
+#historyTable th, #historyTable td {
+  border: 1px solid #ccc;
+  padding: 8px;
   text-align: left;
-  border-bottom: 1px solid #dee2e6;
 }
-
-tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
-
-.total-income {
-  margin-top: 10px;
-  font-weight: bold;
-  font-size: 1.1rem;
+#historyTable th {
+  background: #0052cc;
+  color: #fff;
 }
