@@ -2,86 +2,296 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Win Art Studio – 3D Print Cost & Income Tracker</title>
+  <title>3D Print Cost Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; padding: 0; background: #f4f4f4; }
-    h1 { text-align: center; }
-    .container { background: #fff; padding: 20px; border-radius: 10px; max-width: 700px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    label { display: block; margin-top: 10px; }
-    input, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    button { margin-top: 15px; padding: 10px; width: 100%; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    button:hover { background: #218838; }
-    .result { margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: #2c3e50;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      background: #34495e;
+    }
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      color: #ecf0f1;
+    }
+    .tab.active {
+      background: #1abc9c;
+      color: #fff;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background: #fff;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .input-group {
+      margin: 10px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      padding: 8px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background: #1abc9c;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #16a085;
+    }
+    .result, .stats {
+      margin-top: 15px;
+      padding: 12px;
+      background: #ecf0f1;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background: #1abc9c;
+      color: white;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Win Art Studio – 3D Print Cost & Income Tracker</h1>
-    <label for="material">Material:</label>
-    <select id="material">
-      <option value="filament">Filament</option>
-      <option value="resin">Resin</option>
-    </select>
+  <header>
+    <h1>3D Print Cost Calculator</h1>
+  </header>
 
-    <label for="weight">Weight (grams/ml):</label>
-    <input type="number" id="weight" placeholder="Enter weight">
+  <div class="tabs">
+    <div class="tab active" data-tab="filament">Filament</div>
+    <div class="tab" data-tab="resin">Resin</div>
+    <div class="tab" data-tab="settings">Settings</div>
+    <div class="tab" data-tab="history">History</div>
+  </div>
 
-    <label for="costPerUnit">Cost per kg/L:</label>
-    <input type="number" id="costPerUnit" placeholder="Enter cost per kg (filament) or L (resin)">
+  <!-- Filament Tab -->
+  <div id="filament" class="tab-content active">
+    <div class="input-group">
+      <label>Project Name</label>
+      <input type="text" id="filamentProject" placeholder="e.g., Prototype Gears">
+    </div>
+    <div class="input-group">
+      <label>Filament Price per kg</label>
+      <input type="number" id="filamentPrice" value="1200">
+    </div>
+    <div class="input-group">
+      <label>Filament Used (grams)</label>
+      <input type="number" id="filamentUsed" value="100">
+    </div>
+    <div class="input-group">
+      <label>Print Time (hours)</label>
+      <input type="number" id="filamentHours" value="5">
+    </div>
+    <div class="input-group">
+      <label>Labor Rate (per hour)</label>
+      <input type="number" id="filamentLabor" value="100">
+    </div>
+    <button onclick="calculateFilament()">Calculate</button>
+    <div class="result" id="filamentResult"></div>
+  </div>
 
-    <label for="printTime">Print Time (hours):</label>
-    <input type="number" id="printTime" placeholder="Enter time">
+  <!-- Resin Tab -->
+  <div id="resin" class="tab-content">
+    <div class="input-group">
+      <label>Project Name</label>
+      <input type="text" id="resinProject" placeholder="e.g., Miniature Figure">
+    </div>
+    <div class="input-group">
+      <label>Resin Price per L</label>
+      <input type="number" id="resinPrice" value="2500">
+    </div>
+    <div class="input-group">
+      <label>Resin Used (ml)</label>
+      <input type="number" id="resinUsed" value="50">
+    </div>
+    <div class="input-group">
+      <label>Print Time (hours)</label>
+      <input type="number" id="resinHours" value="6">
+    </div>
+    <div class="input-group">
+      <label>Labor Rate (per hour)</label>
+      <input type="number" id="resinLabor" value="120">
+    </div>
+    <button onclick="calculateResin()">Calculate</button>
+    <div class="result" id="resinResult"></div>
+  </div>
 
-    <label for="rate">Hourly Rate (₱):</label>
-    <input type="number" id="rate" placeholder="Enter your rate">
+  <!-- Settings Tab -->
+  <div id="settings" class="tab-content">
+    <p>Future expansion for default rates, electricity cost, markup %, etc.</p>
+  </div>
 
-    <label for="markup">Markup Percentage (%):</label>
-    <input type="number" id="markup" placeholder="Enter profit %">
-
-    <button onclick="calculateCost()">Calculate</button>
-    <button onclick="exportToExcel()">Export to Excel</button>
-
-    <div class="result" id="result"></div>
+  <!-- History Tab -->
+  <div id="history" class="tab-content">
+    <button onclick="exportHistory()">Export CSV</button>
+    <input type="file" id="importFile" accept=".csv" onchange="importHistory(event)">
+    <table>
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Type</th>
+          <th>Hours</th>
+          <th>Total Cost</th>
+          <th>Final Price</th>
+        </tr>
+      </thead>
+      <tbody id="historyTable"></tbody>
+    </table>
+    <div class="stats">
+      <p>Total Projects: <span id="totalProjects">0</span></p>
+      <p>Total Hours: <span id="totalHours">0</span></p>
+      <p>Total Income: <span id="totalIncome">0</span></p>
+    </div>
   </div>
 
   <script>
-    function calculateCost() {
-      const material = document.getElementById("material").value;
-      const weight = parseFloat(document.getElementById("weight").value) || 0;
-      const costPerUnit = parseFloat(document.getElementById("costPerUnit").value) || 0;
-      const printTime = parseFloat(document.getElementById("printTime").value) || 0;
-      const rate = parseFloat(document.getElementById("rate").value) || 0;
-      const markup = parseFloat(document.getElementById("markup").value) || 0;
+    // Tab switching
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+      });
+    });
 
-      let materialCost = 0;
-      if (material === "filament") {
-        materialCost = (weight / 1000) * costPerUnit;
-      } else if (material === "resin") {
-        materialCost = (weight / 1000) * costPerUnit;
-      }
+    let history = JSON.parse(localStorage.getItem("printHistory") || "[]");
+    updateHistory();
 
-      const laborCost = printTime * rate;
-      const totalCost = materialCost + laborCost;
-      const finalPrice = totalCost * (1 + markup / 100);
-      const income = finalPrice - totalCost;
+    function calculateFilament() {
+      let project = document.getElementById("filamentProject").value || "Unnamed";
+      let price = parseFloat(document.getElementById("filamentPrice").value);
+      let used = parseFloat(document.getElementById("filamentUsed").value);
+      let hours = parseFloat(document.getElementById("filamentHours").value);
+      let labor = parseFloat(document.getElementById("filamentLabor").value);
 
-      document.getElementById("result").innerHTML = `
-        <p><strong>Material Cost:</strong> ₱${materialCost.toFixed(2)}</p>
-        <p><strong>Labor Cost:</strong> ₱${laborCost.toFixed(2)}</p>
-        <p><strong>Total Cost:</strong> ₱${totalCost.toFixed(2)}</p>
-        <p><strong>Final Price (with markup):</strong> ₱${finalPrice.toFixed(2)}</p>
-        <p><strong>Expected Income:</strong> ₱${income.toFixed(2)}</p>
-      `;
+      let materialCost = (price / 1000) * used;
+      let laborCost = labor * hours;
+      let totalCost = materialCost + laborCost;
+      let finalPrice = totalCost * 1.3; // markup 30%
+
+      document.getElementById("filamentResult").innerHTML =
+        `Material: ₱${materialCost.toFixed(2)}<br>
+         Labor: ₱${laborCost.toFixed(2)}<br>
+         Total Cost: ₱${totalCost.toFixed(2)}<br>
+         Final Price: ₱${finalPrice.toFixed(2)}`;
+
+      addToHistory(project, "Filament", hours, totalCost, finalPrice);
     }
 
-    function exportToExcel() {
-      const result = document.getElementById("result").innerText;
-      const blob = new Blob([result], { type: "application/vnd.ms-excel" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "3d_print_costs.xls";
-      link.click();
+    function calculateResin() {
+      let project = document.getElementById("resinProject").value || "Unnamed";
+      let price = parseFloat(document.getElementById("resinPrice").value);
+      let used = parseFloat(document.getElementById("resinUsed").value);
+      let hours = parseFloat(document.getElementById("resinHours").value);
+      let labor = parseFloat(document.getElementById("resinLabor").value);
+
+      let materialCost = (price / 1000) * used;
+      let laborCost = labor * hours;
+      let totalCost = materialCost + laborCost;
+      let finalPrice = totalCost * 1.3; // markup 30%
+
+      document.getElementById("resinResult").innerHTML =
+        `Material: ₱${materialCost.toFixed(2)}<br>
+         Labor: ₱${laborCost.toFixed(2)}<br>
+         Total Cost: ₱${totalCost.toFixed(2)}<br>
+         Final Price: ₱${finalPrice.toFixed(2)}`;
+
+      addToHistory(project, "Resin", hours, totalCost, finalPrice);
+    }
+
+    function addToHistory(project, type, hours, totalCost, finalPrice) {
+      history.push({project, type, hours, totalCost, finalPrice});
+      localStorage.setItem("printHistory", JSON.stringify(history));
+      updateHistory();
+    }
+
+    function updateHistory() {
+      let tbody = document.getElementById("historyTable");
+      tbody.innerHTML = "";
+      let totalHours = 0, totalIncome = 0;
+      history.forEach(h => {
+        let row = `<tr>
+          <td>${h.project}</td>
+          <td>${h.type}</td>
+          <td>${h.hours}</td>
+          <td>₱${h.totalCost.toFixed(2)}</td>
+          <td>₱${h.finalPrice.toFixed(2)}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+        totalHours += h.hours;
+        totalIncome += h.finalPrice;
+      });
+      document.getElementById("totalProjects").innerText = history.length;
+      document.getElementById("totalHours").innerText = totalHours;
+      document.getElementById("totalIncome").innerText = "₱" + totalIncome.toFixed(2);
+    }
+
+    function exportHistory() {
+      let csv = "Project,Type,Hours,Total Cost,Final Price\n";
+      history.forEach(h => {
+        csv += `${h.project},${h.type},${h.hours},${h.totalCost},${h.finalPrice}\n`;
+      });
+      let blob = new Blob([csv], { type: "text/csv" });
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement("a");
+      a.href = url;
+      a.download = "history.csv";
+      a.click();
+    }
+
+    function importHistory(event) {
+      let file = event.target.files[0];
+      if (!file) return;
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        let rows = e.target.result.split("\n").slice(1);
+        rows.forEach(row => {
+          let [project, type, hours, totalCost, finalPrice] = row.split(",");
+          if (project) {
+            history.push({project, type, hours: parseFloat(hours), totalCost: parseFloat(totalCost), finalPrice: parseFloat(finalPrice)});
+          }
+        });
+        localStorage.setItem("printHistory", JSON.stringify(history));
+        updateHistory();
+      };
+      reader.readAsText(file);
     }
   </script>
 </body>
