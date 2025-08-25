@@ -1,34 +1,59 @@
-function calculateCost() {
-  const material = document.getElementById("material").value;
-  const materialCost = parseFloat(document.getElementById("materialCost").value);
-  const materialUsed = parseFloat(document.getElementById("materialUsed").value);
-  const printTime = parseFloat(document.getElementById("printTime").value);
-  const electricityCost = parseFloat(document.getElementById("electricityCost").value);
-  const printerPower = parseFloat(document.getElementById("printerPower").value);
-  const laborCost = parseFloat(document.getElementById("laborCost").value);
-  const profitMargin = parseFloat(document.getElementById("profitMargin").value);
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  margin: 0;
+  padding: 0;
+}
 
-  let materialUnitCost = 0;
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
-  if (material === "filament") {
-    // grams to kg
-    materialUnitCost = (materialUsed / 1000) * materialCost;
-  } else {
-    // ml to L
-    materialUnitCost = (materialUsed / 1000) * materialCost;
-  }
+h1, h2 {
+  text-align: center;
+  color: #333;
+}
 
-  const electricityUsed = (printerPower / 1000) * printTime;
-  const electricityTotal = electricityUsed * electricityCost;
+form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
 
-  const totalCost = materialUnitCost + electricityTotal + laborCost;
-  const finalPrice = totalCost * (1 + profitMargin / 100);
-  const income = finalPrice - totalCost;
+label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  document.getElementById("materialCostResult").innerText = "Material Cost: ₱" + materialUnitCost.toFixed(2);
-  document.getElementById("electricityCostResult").innerText = "Electricity Cost: ₱" + electricityTotal.toFixed(2);
-  document.getElementById("laborCostResult").innerText = "Labor/Overhead Cost: ₱" + laborCost.toFixed(2);
-  document.getElementById("totalCostResult").innerText = "Total Production Cost: ₱" + totalCost.toFixed(2);
-  document.getElementById("finalPriceResult").innerText = "Suggested Price (with Profit): ₱" + finalPrice.toFixed(2);
-  document.getElementById("incomeResult").innerText = "Expected Income: ₱" + income.toFixed(2);
+input {
+  padding: 6px;
+  width: 200px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px;
+  background: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #005fa3;
+}
+
+#results {
+  margin-top: 25px;
+  padding: 15px;
+  background: #f0f0f0;
+  border-radius: 10px;
 }
