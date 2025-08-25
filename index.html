@@ -1,275 +1,77 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</title>
-
-  <!-- Corporate stylesheet -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- XLSX (for Excel export/import) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="brand">
-        <div class="brand-dot"></div>
-        <div class="brand-text">Win Art Studio</div>
-      </div>
-      <div class="title">3D Printing Calculator and Income Tracker + Invoice</div>
-    </div>
+  <header>
+    <h1>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</h1>
+    <input type="file" id="logoUpload" accept="image/*">
+    <img id="logoPreview" alt="Logo Preview">
   </header>
 
-  <main class="container">
-    <section class="card">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="resin-tab">Resin</button>
-        <button class="tab-btn" data-tab="filament-tab">Filament</button>
-        <div class="spacer"></div>
-        <div class="small-muted">History & Export available below</div>
-      </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="resin">Resin Projects</button>
+    <button class="tab-btn" data-tab="filament">Filament Projects</button>
+  </div>
 
-      <!-- RESIN TAB -->
-      <div id="resin-tab" class="tab-panel active">
-        <form id="resinForm" class="grid-form">
-          <div class="col-6">
-            <label>Project name
-              <input id="r-name" type="text" placeholder="e.g. 1/6 head sculpt">
-            </label>
-          </div>
+  <div id="resin" class="tab-content active">
+    <form id="resinForm" class="project-form">
+      <h2>Resin Project</h2>
+      <input type="text" id="resinProjectName" placeholder="Project Name">
+      <input type="text" id="resinCurrency" placeholder="Currency (₱, $, €)">
+      <input type="number" id="resinPrice" placeholder="Resin Price per ml/gram">
+      <input type="number" id="resinUsed" placeholder="Resin Used (ml/grams)">
+      <input type="number" id="resinTime" placeholder="Print Time (hours)">
+      <input type="number" id="resinPower" placeholder="Power Draw (W)">
+      <input type="number" id="resinElectricity" placeholder="Electricity Rate (/kWh)">
+      <input type="number" id="resinLabor" placeholder="Labor Rate (/hr)">
+      <input type="number" id="resinAmortization" placeholder="Machine Amortization">
+      <input type="number" id="resinMachine" placeholder="Machine Price">
+      <input type="number" id="resinMarkup" placeholder="Markup %">
+      <button type="button" onclick="calculateResin()">Save Resin Project</button>
+    </form>
+  </div>
 
-          <div class="col-2">
-            <label>Currency symbol
-              <input id="r-currency" type="text" value="₱" maxlength="4">
-            </label>
-          </div>
+  <div id="filament" class="tab-content">
+    <form id="filamentForm" class="project-form">
+      <h2>Filament Project</h2>
+      <input type="text" id="filamentProjectName" placeholder="Project Name">
+      <input type="text" id="filamentCurrency" placeholder="Currency (₱, $, €)">
+      <input type="number" id="filamentPrice" placeholder="Filament Price per gram">
+      <input type="number" id="filamentUsed" placeholder="Filament Used (grams)">
+      <input type="number" id="filamentTime" placeholder="Print Time (hours)">
+      <input type="number" id="filamentPower" placeholder="Power Draw (W)">
+      <input type="number" id="filamentElectricity" placeholder="Electricity Rate (/kWh)">
+      <input type="number" id="filamentLabor" placeholder="Labor Rate (/hr)">
+      <input type="number" id="filamentAmortization" placeholder="Machine Amortization">
+      <input type="number" id="filamentMachine" placeholder="Machine Price">
+      <input type="number" id="filamentMarkup" placeholder="Markup %">
+      <button type="button" onclick="calculateFilament()">Save Filament Project</button>
+    </form>
+  </div>
 
-          <div class="col-4">
-            <label>Wastage %
-              <input id="r-waste" type="number" min="0" value="8">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Resin price (per liter)
-              <input id="r-priceL" type="number" min="0" step="0.01" value="1200">
-            </label>
-            <small class="hint">Price per L (we will accept used in ml)</small>
-          </div>
-
-          <div class="col-4">
-            <label>Resin used (ml)
-              <input id="r-ml" type="number" min="0" step="0.1" value="90">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>IPA / consumables
-              <input id="r-consumables" type="number" min="0" step="0.01" value="30">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Print time (hours)
-              <input id="r-time" type="number" min="0" step="0.1" value="7.5">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Printer power draw (W)
-              <input id="r-watts" type="number" min="0" step="1" value="70">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Electricity rate (per kWh)
-              <input id="r-kwh" type="number" min="0" step="0.01" value="12">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Labor rate (per hour)
-              <input id="r-laborRate" type="number" min="0" step="0.01" value="250">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Operator + post hours
-              <input id="r-laborHours" type="number" min="0" step="0.1" value="1.0">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Machine price
-              <input id="r-machinePrice" type="number" min="0" step="1" value="20000">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Amortization (years)
-              <input id="r-amortYears" type="number" min="0.1" step="0.1" value="3">
-            </label>
-            <small class="hint">How many years to amortize the machine</small>
-          </div>
-
-          <div class="col-4">
-            <label>Markup %
-              <input id="r-markup" type="number" min="0" step="0.1" value="30">
-            </label>
-          </div>
-
-          <div class="col-12 actions">
-            <button type="button" class="btn primary" id="r-calc">Calculate & Save Project</button>
-            <button type="button" class="btn" id="r-clear">Clear</button>
-          </div>
-        </form>
-
-        <div class="result-box" id="r-result"></div>
-      </div>
-
-      <!-- FILAMENT TAB -->
-      <div id="filament-tab" class="tab-panel">
-        <form id="fForm" class="grid-form">
-          <div class="col-6">
-            <label>Project name
-              <input id="f-name" type="text" placeholder="e.g. PLA gear prototype">
-            </label>
-          </div>
-
-          <div class="col-2">
-            <label>Currency symbol
-              <input id="f-currency" type="text" value="₱" maxlength="4">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Wastage %
-              <input id="f-waste" type="number" min="0" value="5">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Filament price (per kg)
-              <input id="f-priceKg" type="number" min="0" step="0.01" value="900">
-            </label>
-            <small class="hint">e.g. eSUN PLA+ ~ ₱799–₱900 (editable)</small>
-          </div>
-
-          <div class="col-4">
-            <label>Filament used (grams)
-              <input id="f-grams" type="number" min="0" step="0.1" value="120">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Print time (hours)
-              <input id="f-time" type="number" min="0" step="0.1" value="6">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Printer power draw (W)
-              <input id="f-watts" type="number" min="0" step="1" value="120">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Electricity rate (per kWh)
-              <input id="f-kwh" type="number" min="0" step="0.01" value="12">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Labor rate (per hour)
-              <input id="f-laborRate" type="number" min="0" step="0.01" value="200">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Operator time (hours)
-              <input id="f-laborHours" type="number" min="0" step="0.1" value="0.5">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Machine price
-              <input id="f-machinePrice" type="number" min="0" step="1" value="20000">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Amortization (years)
-              <input id="f-amortYears" type="number" min="0.1" step="0.1" value="3">
-            </label>
-          </div>
-
-          <div class="col-4">
-            <label>Markup %
-              <input id="f-markup" type="number" min="0" step="0.1" value="30">
-            </label>
-          </div>
-
-          <div class="col-12 actions">
-            <button type="button" class="btn primary" id="f-calc">Calculate & Save Project</button>
-            <button type="button" class="btn" id="f-clear">Clear</button>
-          </div>
-        </form>
-
-        <div class="result-box" id="f-result"></div>
-      </div>
-    </section>
-
-    <!-- History & Exports -->
-    <section class="card history-card">
-      <div class="history-header">
-        <h2>Project History</h2>
-        <div class="history-actions">
-          <input id="importFile" type="file" accept=".csv,.xlsx" />
-          <button class="btn" id="importBtn">Import CSV/XLSX</button>
-          <button class="btn" id="exportAllBtn">Export All (Excel)</button>
-        </div>
-      </div>
-
-      <div class="table-wrap">
-        <table id="historyTable">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Date</th>
-              <th>Project</th>
-              <th>Type</th>
-              <th>Total Cost</th>
-              <th>Final Price</th>
-              <th>Income</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <div class="summary">
-        <div class="kpis">
-          <div class="kpi">
-            <div class="kpi-label">Projects</div>
-            <div id="kpi-projects" class="kpi-value">0</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Total Hours</div>
-            <div id="kpi-hours" class="kpi-value">0</div>
-          </div>
-          <div class="kpi">
-            <div class="kpi-label">Total Income</div>
-            <div id="kpi-income" class="kpi-value">₱0.00</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">Win Art Studio • 3D Printing Calculator & Income Tracker</footer>
+  <section class="history">
+    <h2>Project History</h2>
+    <table id="historyTable">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Project Name</th>
+          <th>Total Cost</th>
+          <th>Final Price</th>
+          <th>Currency</th>
+          <th>Invoice</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button onclick="exportHistory()">Export History to Excel</button>
+  </section>
 
   <script src="script.js"></script>
 </body>
