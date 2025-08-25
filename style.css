@@ -89,6 +89,7 @@ input {
   padding: 10px;
   background: #f1f2f6;
   border-radius: 8px;
+  font-weight: 500;
 }
 
 table {
@@ -104,4 +105,8 @@ table, th, td {
 th, td {
   padding: 8px;
   text-align: center;
+}
+
+tfoot td {
+  font-weight: bold;
 }
