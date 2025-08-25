@@ -9,80 +9,102 @@
 <body>
   <div class="container">
     <h1>3D Printing Cost Calculator</h1>
-    <form id="costForm">
-      <div class="form-group">
+    
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-button active" data-tab="resin">Resin</button>
+      <button class="tab-button" data-tab="filament">Filament</button>
+    </div>
+
+    <!-- Resin Form -->
+    <div class="tab-content active" id="resin">
+      <form id="resinForm">
         <label>Project Name</label>
-        <input type="text" id="projectName" placeholder="Enter project name">
-      </div>
+        <input type="text" id="resinProject" placeholder="Enter project name">
 
-      <div class="form-group">
-        <label>Material Type</label>
-        <select id="materialType">
-          <option value="resin">Resin</option>
-          <option value="filament">Filament (eSUN PLA+)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
         <label>Currency</label>
-        <input type="text" id="currency" value="PHP">
-      </div>
+        <input type="text" id="resinCurrency" value="$">
 
-      <div class="form-group">
-        <label>Material Price (per liter/kg)</label>
-        <input type="number" id="materialPrice" value="1200">
-      </div>
+        <label>Resin Price per Liter</label>
+        <input type="number" id="resinPrice" value="1200">
 
-      <div class="form-group">
-        <label>Material Used (ml or g)</label>
-        <input type="number" id="materialUsed">
-      </div>
+        <label>Resin Used (ml)</label>
+        <input type="number" id="resinUsed">
 
-      <div class="form-group">
         <label>Print Time (hours)</label>
-        <input type="number" id="printTime">
-      </div>
+        <input type="number" id="resinPrintTime">
 
-      <div class="form-group">
-        <label>Printer Power Draw (W)</label>
-        <input type="number" id="powerDraw">
-      </div>
+        <label>Printer Power Draw (watts)</label>
+        <input type="number" id="resinPowerDraw">
 
-      <div class="form-group">
         <label>Electricity Rate (per kWh)</label>
-        <input type="number" id="electricityRate">
-      </div>
+        <input type="number" id="resinElectricity">
 
-      <div class="form-group">
         <label>Labor Rate (per hour)</label>
-        <input type="number" id="laborRate">
-      </div>
+        <input type="number" id="resinLabor">
 
-      <div class="form-group">
-        <label>Operator + Post Hours</label>
-        <input type="number" id="laborHours">
-      </div>
+        <label>Operator + Post-processing Hours</label>
+        <input type="number" id="resinOperatorHours">
 
-      <div class="form-group">
         <label>Machine Price</label>
-        <input type="number" id="machinePrice">
-      </div>
+        <input type="number" id="resinMachinePrice">
 
-      <div class="form-group">
-        <label>Amortization Period (years)</label>
-        <input type="number" id="amortYears">
-      </div>
+        <label>Machine Amortization (years)</label>
+        <input type="number" id="resinAmortization">
 
-      <div class="form-group">
         <label>Markup (%)</label>
-        <input type="number" id="markup" value="30">
-      </div>
+        <input type="number" id="resinMarkup">
 
-      <button type="button" onclick="calculateCost()">Calculate</button>
-    </form>
+        <button type="button" onclick="calculateResin()">Calculate</button>
+      </form>
+      <div id="resinResult" class="result"></div>
+    </div>
 
-    <div id="result"></div>
+    <!-- Filament Form -->
+    <div class="tab-content" id="filament">
+      <form id="filamentForm">
+        <label>Project Name</label>
+        <input type="text" id="filamentProject" placeholder="Enter project name">
+
+        <label>Currency</label>
+        <input type="text" id="filamentCurrency" value="$">
+
+        <label>Filament Price per Kg</label>
+        <input type="number" id="filamentPrice" value="800">
+
+        <label>Filament Used (grams)</label>
+        <input type="number" id="filamentUsed">
+
+        <label>Print Time (hours)</label>
+        <input type="number" id="filamentPrintTime">
+
+        <label>Printer Power Draw (watts)</label>
+        <input type="number" id="filamentPowerDraw">
+
+        <label>Electricity Rate (per kWh)</label>
+        <input type="number" id="filamentElectricity">
+
+        <label>Labor Rate (per hour)</label>
+        <input type="number" id="filamentLabor">
+
+        <label>Operator + Post-processing Hours</label>
+        <input type="number" id="filamentOperatorHours">
+
+        <label>Machine Price</label>
+        <input type="number" id="filamentMachinePrice">
+
+        <label>Machine Amortization (years)</label>
+        <input type="number" id="filamentAmortization">
+
+        <label>Markup (%)</label>
+        <input type="number" id="filamentMarkup">
+
+        <button type="button" onclick="calculateFilament()">Calculate</button>
+      </form>
+      <div id="filamentResult" class="result"></div>
+    </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
