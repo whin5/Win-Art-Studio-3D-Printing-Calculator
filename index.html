@@ -13,7 +13,7 @@
     <label class="logo-upload">Upload Logo
       <input type="file" id="logoInput">
     </label>
-    <img id="logoPreview" src="" alt="Company Logo" style="display:none; max-height:50px;">
+    <img id="logoPreview" src="" alt="Company Logo" style="display:none;">
   </header>
 
   <div class="tabs">
@@ -64,9 +64,6 @@
   <!-- History Tab -->
   <div id="history" class="tab-panel" style="display:none;">
     <h2>Project History</h2>
-    <input type="file" id="importHistoryInput" accept=".csv">
-    <button id="exportHistory" class="btn">Export History to Excel</button>
-    <button id="clearHistory" class="btn" style="background:#cc0000;">Clear History</button>
     <table id="historyTable">
       <thead>
         <tr>
@@ -74,11 +71,18 @@
           <th>Type</th>
           <th>Total Cost</th>
           <th>Total Income</th>
+          <th>Invoice</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
-    <p>Total Income: <span id="totalIncome">0</span></p>
+    <div class="history-actions">
+      <button id="exportHistory" class="btn">Export History to Excel</button>
+      <button id="importHistory" class="btn">Import History CSV</button>
+      <button id="clearHistory" class="btn">Clear History</button>
+    </div>
+    <p id="totalIncome">Total Income: 0</p>
+    <input type="file" id="importFile" style="display:none;">
   </div>
 </div>
 
