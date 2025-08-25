@@ -53,7 +53,7 @@ header h1 {
   border: 1px solid #dcdde1;
   border-top: none;
   padding: 20px;
-  display: block;
+  display: none;
   border-radius: 0 0 12px 12px;
 }
 
