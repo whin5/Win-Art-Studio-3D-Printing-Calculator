@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  const companyName = "Win Art Studio"; // Company name for invoices
+
   // --- Tabs ---
   const tabBtns = document.querySelectorAll('.tab-btn');
   tabBtns.forEach(btn => {
@@ -51,30 +53,51 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
   }
 
-  // --- Export Invoice ---
+  // --- Export Invoice (Cost Only with Company Name) ---
   window.exportInvoice = function(index){
     const project = historyData[index];
     const wb = XLSX.utils.book_new();
     const wsData = [
+      ['Company', companyName],
       ['Project Name', project.name],
       ['Type', project.type],
-      ['Total Cost', project.totalCost.toFixed(2)],
-      ['Total Income', project.totalIncome.toFixed(2)]
+      ['Material Cost', project.materialCost.toFixed(2)],
+      ['Electricity Cost', project.electricityCost.toFixed(2)],
+      ['Labor Cost', project.laborCost.toFixed(2)],
+      ['Machine Cost', project.machineCost.toFixed(2)],
+      ['Total Cost', project.totalCost.toFixed(2)]
     ];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // Add professional styling
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for(let R = 0; R <= range.e.r; ++R){
+      for(let C = 0; C <= range.e.c; ++C){
+        const cell = ws[XLSX.utils.encode_cell({r:R,c:C})];
+        if(!cell.s) cell.s = {};
+        cell.s = {
+          fill: { fgColor: { rgb: "FFFFF0" } },
+          font: { bold: R===0 ? true : false }
+        };
+      }
+    }
+
     XLSX.utils.book_append_sheet(wb, ws, 'Invoice');
     XLSX.writeFile(wb, `${project.name}_Invoice.xlsx`);
   }
 
-  // --- Export Last Invoice ---
   function exportLastInvoice() {
     if(!lastProject) { alert("No project calculated yet!"); return; }
     const wb = XLSX.utils.book_new();
     const wsData = [
+      ['Company', companyName],
       ['Project Name', lastProject.name],
       ['Type', lastProject.type],
-      ['Total Cost', lastProject.totalCost.toFixed(2)],
-      ['Total Income', lastProject.totalIncome.toFixed(2)]
+      ['Material Cost', lastProject.materialCost.toFixed(2)],
+      ['Electricity Cost', lastProject.electricityCost.toFixed(2)],
+      ['Labor Cost', lastProject.laborCost.toFixed(2)],
+      ['Machine Cost', lastProject.machineCost.toFixed(2)],
+      ['Total Cost', lastProject.totalCost.toFixed(2)]
     ];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
     XLSX.utils.book_append_sheet(wb, ws, 'Invoice');
@@ -114,7 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
       Total Income: ${currency} ${totalIncome.toFixed(2)}
     `;
 
-    lastProject = { name, type:'Resin', totalCost, totalIncome, currency };
+    lastProject = { 
+      name, type:'Resin', totalCost, totalIncome, currency, 
+      materialCost, electricityCost, laborCost, machineCost 
+    };
     historyData.push(lastProject);
     localStorage.setItem('projects', JSON.stringify(historyData));
     updateHistory();
@@ -149,7 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
       Total Income: ${currency} ${totalIncome.toFixed(2)}
     `;
 
-    lastProject = { name, type:'Filament', totalCost, totalIncome, currency };
+    lastProject = { 
+      name, type:'Filament', totalCost, totalIncome, currency, 
+      materialCost, electricityCost, laborCost, machineCost 
+    };
     historyData.push(lastProject);
     localStorage.setItem('projects', JSON.stringify(historyData));
     updateHistory();
