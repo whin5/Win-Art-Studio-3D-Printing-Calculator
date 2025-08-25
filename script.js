@@ -1,59 +1,40 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f7fa;
-  margin: 0;
-  padding: 0;
-}
+function calculateCost() {
+  const currency = document.getElementById("currency").value || "₱";
 
-.container {
-  max-width: 700px;
-  margin: 40px auto;
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+  const resinPrice = parseFloat(document.getElementById("resinPrice").value) || 0;
+  const resinUsed = parseFloat(document.getElementById("resinUsed").value) || 0;
+  const wastage = parseFloat(document.getElementById("wastage").value) || 0;
 
-h1, h2 {
-  text-align: center;
-  color: #333;
-}
+  const ipa = parseFloat(document.getElementById("ipa").value) || 0;
+  const printTime = parseFloat(document.getElementById("printTime").value) || 0;
+  const power = parseFloat(document.getElementById("power").value) || 0;
+  const rate = parseFloat(document.getElementById("rate").value) || 0;
 
-form {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
+  const laborRate = parseFloat(document.getElementById("laborRate").value) || 0;
+  const laborHours = parseFloat(document.getElementById("laborHours").value) || 0;
+  const amortization = parseFloat(document.getElementById("amortization").value) || 0;
+  const markup = parseFloat(document.getElementById("markup").value) || 0;
 
-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  // Material cost
+  const resinCost = (resinPrice / 1000) * resinUsed;
+  const wastageCost = resinCost * (wastage / 100);
+  const materialCost = resinCost + wastageCost + ipa;
 
-input {
-  padding: 6px;
-  width: 200px;
-}
+  // Electricity
+  const electricityCost = ((power * printTime) / 1000) * rate;
 
-button {
-  margin-top: 15px;
-  padding: 10px;
-  background: #0077cc;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
+  // Labor
+  const laborCost = laborRate * laborHours;
 
-button:hover {
-  background: #005fa3;
-}
+  // Total
+  const totalCost = materialCost + electricityCost + laborCost + amortization;
 
-#results {
-  margin-top: 25px;
-  padding: 15px;
-  background: #f0f0f0;
-  border-radius: 10px;
+  // Final price
+  const finalPrice = totalCost * (1 + markup / 100);
+
+  document.getElementById("materialCost").innerText = currency + materialCost.toFixed(2);
+  document.getElementById("electricityCost").innerText = currency + electricityCost.toFixed(2);
+  document.getElementById("laborCost").innerText = currency + laborCost.toFixed(2);
+  document.getElementById("totalCost").innerText = currency + totalCost.toFixed(2);
+  document.getElementById("finalPrice").innerText = currency + finalPrice.toFixed(2);
 }
