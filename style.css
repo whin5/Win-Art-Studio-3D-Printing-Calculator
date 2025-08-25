@@ -1,28 +1,22 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f3f4f6;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
   margin: 0;
   padding: 0;
-  color: #333;
 }
 
 .container {
   max-width: 1100px;
-  margin: auto;
+  margin: 20px auto;
   padding: 20px;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  border-radius: 10px;
 }
 
 header h1 {
-  font-size: 1.8em;
-  margin: 0;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
 }
 
 .logo-upload input {
@@ -30,11 +24,13 @@ header h1 {
 }
 
 .logo-upload {
-  background: #0078d7;
+  display: inline-block;
+  margin-bottom: 10px;
+  cursor: pointer;
+  background-color: #007bff;
   color: white;
   padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 5px;
 }
 
 .tabs {
@@ -44,69 +40,84 @@ header h1 {
 
 .tab-btn {
   flex: 1;
-  padding: 12px;
-  background: #fff;
-  border: 1px solid #ccc;
+  padding: 10px 0;
   cursor: pointer;
-  text-align: center;
+  border: none;
+  background-color: #e9ecef;
+  font-weight: bold;
   transition: 0.3s;
 }
 
 .tab-btn.active {
-  background: #0078d7;
+  background-color: #007bff;
   color: white;
 }
 
-.tab-panel {
-  background: #fff;
-  padding: 20px;
-  border: 1px solid #ccc;
+.tab-btn:hover:not(.active) {
+  background-color: #ced4da;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
-label {
+.grid label {
   display: flex;
   flex-direction: column;
-  font-weight: 500;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
 input {
   padding: 6px;
-  border: 1px solid #ccc;
+  margin-top: 4px;
+  border: 1px solid #ced4da;
   border-radius: 4px;
 }
 
 .btn {
-  background: #0078d7;
-  color: white;
+  padding: 8px 15px;
   border: none;
-  padding: 10px 16px;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
   cursor: pointer;
-  border-radius: 4px;
   margin-top: 10px;
 }
 
+.btn:hover {
+  background-color: #0056b3;
+}
+
 .results {
-  margin-top: 20px;
-  font-weight: bold;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  margin-top: 10px;
+  background-color: #f1f3f5;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
 th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
+  padding: 10px;
   text-align: left;
+  border-bottom: 1px solid #dee2e6;
 }
-th {
-  background: #0078d7;
-  color: white;
+
+tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.total-income {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
 }
