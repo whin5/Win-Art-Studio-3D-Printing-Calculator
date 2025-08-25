@@ -1,43 +1,107 @@
-// Tab Switching
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tab = btn.dataset.tab;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
-    document.getElementById(tab).style.display = 'block';
-  });
-});
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
+  color: #333;
+  margin: 0;
+}
 
-// Logo Upload Preview
-document.getElementById('logoInput').addEventListener('change', function() {
-  const file = this.files[0];
-  if(file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = document.getElementById('logoPreview');
-      img.src = e.target.result;
-      img.style.display = 'block';
-    }
-    reader.readAsDataURL(file);
-  }
-});
+.container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
-// Local Storage & History
-let historyData = JSON.parse(localStorage.getItem('projects')) || [];
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
 
-function updateHistory() {
-  const tbody = document.querySelector('#historyTable tbody');
-  tbody.innerHTML = '';
-  let totalIncome = 0;
-  historyData.forEach((p, i) => {
-    totalIncome += p.totalIncome;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${p.name}</td>
-                    <td>${p.type}</td>
-                    <td>${p.totalCost.toFixed(2)}</td>
-                    <td>${p.totalIncome.toFixed(2)}</td>
-                    <td><button onclick="exportInvoice(${i})">Invoice</button></td>`;
-    tbody.appendChild(tr);
-  });
-  document.getElementById('totalIncome').textContent =
+header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.logo-upload input {
+  display: none;
+}
+
+.tabs {
+  margin-top: 20px;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  margin-right: 5px;
+  background-color: #dcdde1;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background-color: #0097e6;
+  color: #fff;
+}
+
+.tab-panel {
+  border: 1px solid #dcdde1;
+  border-top: none;
+  padding: 20px;
+  display: block;
+  border-radius: 0 0 12px 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btn {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #0097e6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.results {
+  margin-top: 15px;
+  padding: 10px;
+  background: #f1f2f6;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table, th, td {
+  border: 1px solid #333;
+}
+
+th, td {
+  padding: 8px;
+  text-align: center;
+}
