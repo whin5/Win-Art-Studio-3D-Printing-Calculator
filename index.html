@@ -2,279 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Printing Project Manager</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      background: #f8f9fb;
-      color: #333;
-    }
-    header {
-      background: #0a3d62;
-      color: white;
-      padding: 15px 30px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .container {
-      padding: 20px 40px;
-    }
-    .tabs {
-      display: flex;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #ccc;
-    }
-    .tab {
-      padding: 12px 20px;
-      cursor: pointer;
-      background: #eaeaea;
-      margin-right: 5px;
-      border-radius: 6px 6px 0 0;
-      font-weight: 500;
-    }
-    .tab.active {
-      background: #0a3d62;
-      color: white;
-    }
-    .form-section {
-      display: none;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .form-section.active {
-      display: block;
-    }
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #0a3d62;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #07416c;
-    }
-    .history {
-      margin-top: 40px;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background: #f1f1f1;
-    }
-    .export-buttons {
-      margin-top: 20px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Win Art Studio: 3D Print Cost Calculator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>3D Printing Project Manager</header>
-  <div class="container">
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab('resin')">Resin Projects</div>
-      <div class="tab" onclick="switchTab('filament')">Filament Projects</div>
-    </div>
+  <header>
+    <h1>3D Print Cost Calculator</h1>
+  </header>
 
-    <!-- Resin Form -->
-    <div id="resin" class="form-section active">
-      <h3>New Resin Project</h3>
-      <form id="resinForm">
-        <label>Project Name</label>
-        <input type="text" id="resinProjectName" required>
-        <label>Currency</label>
-        <input type="text" id="resinCurrency" value="USD">
-        <label>Resin Price (per liter)</label>
-        <input type="number" id="resinPrice" value="1200">
-        <label>Resin Used (liters)</label>
-        <input type="number" id="resinUsed">
-        <label>Print Time (hours)</label>
-        <input type="number" id="resinPrintTime">
-        <label>Power Draw (watts)</label>
-        <input type="number" id="resinPower">
-        <label>Electricity Rate (per kWh)</label>
-        <input type="number" id="resinElectricity">
-        <label>Labor Rate</label>
-        <input type="number" id="resinLabor">
-        <label>Machine Amortization</label>
-        <input type="number" id="resinAmortization">
-        <label>Machine Price</label>
-        <input type="number" id="resinMachinePrice">
-        <label>Markup (%)</label>
-        <input type="number" id="resinMarkup">
-        <button type="button" onclick="saveProject('resin')">Save Resin Project</button>
-      </form>
-    </div>
-
-    <!-- Filament Form -->
-    <div id="filament" class="form-section">
-      <h3>New Filament Project</h3>
-      <form id="filamentForm">
-        <label>Project Name</label>
-        <input type="text" id="filamentProjectName" required>
-        <label>Currency</label>
-        <input type="text" id="filamentCurrency" value="USD">
-        <label>Filament Price (per kg)</label>
-        <input type="number" id="filamentPrice" value="800">
-        <label>Filament Used (kg)</label>
-        <input type="number" id="filamentUsed">
-        <label>Print Time (hours)</label>
-        <input type="number" id="filamentPrintTime">
-        <label>Power Draw (watts)</label>
-        <input type="number" id="filamentPower">
-        <label>Electricity Rate (per kWh)</label>
-        <input type="number" id="filamentElectricity">
-        <label>Labor Rate</label>
-        <input type="number" id="filamentLabor">
-        <label>Machine Amortization</label>
-        <input type="number" id="filamentAmortization">
-        <label>Machine Price</label>
-        <input type="number" id="filamentMachinePrice">
-        <label>Markup (%)</label>
-        <input type="number" id="filamentMarkup">
-        <button type="button" onclick="saveProject('filament')">Save Filament Project</button>
-      </form>
-    </div>
-
-    <!-- History -->
-    <div class="history">
-      <h3>Project History</h3>
-      <table id="historyTable">
-        <thead>
-          <tr>
-            <th>Project Name</th>
-            <th>Type</th>
-            <th>Total Cost</th>
-            <th>Final Price</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <p><strong>Overall Income:</strong> <span id="overallIncome">0</span></p>
-      <div class="export-buttons">
-        <button onclick="exportExcel()">Export All to Excel</button>
-      </div>
-    </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="resin">Resin Project</button>
+    <button class="tab-btn" data-tab="filament">Filament Project</button>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script>
-    let projects = [];
+  <!-- Resin Form -->
+  <div class="tab-content active" id="resin">
+    <h2>Resin Project</h2>
+    <form id="resinForm">
+      <label>Project Name: <input type="text" id="resinProjectName"></label>
+      <label>Currency: <input type="text" id="resinCurrency" value="$"></label>
+      <label>Resin Price (per ml or gram): <input type="number" id="resinPrice" value="1.2"></label>
+      <label>Used Resin (ml or grams): <input type="number" id="resinUsed" value="500"></label>
+      <label>Print Time (hours): <input type="number" id="resinTime"></label>
+      <label>Power Draw (watts): <input type="number" id="resinPower"></label>
+      <label>Electricity Rate (per kWh): <input type="number" id="resinElec"></label>
+      <label>Labor Rate (per hour): <input type="number" id="resinLabor"></label>
+      <label>Machine Amortization (months): <input type="number" id="resinAmort"></label>
+      <label>Machine Price: <input type="number" id="resinMachine"></label>
+      <label>Markup (%): <input type="number" id="resinMarkup" value="30"></label>
+      <button type="button" onclick="calculateResin()">Calculate</button>
+    </form>
+    <div id="resinResult"></div>
+  </div>
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
-      document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
-      document.getElementById(tabId).classList.add('active');
-    }
+  <!-- Filament Form -->
+  <div class="tab-content" id="filament">
+    <h2>Filament Project</h2>
+    <form id="filamentForm">
+      <label>Project Name: <input type="text" id="filamentProjectName"></label>
+      <label>Currency: <input type="text" id="filamentCurrency" value="$"></label>
+      <label>Filament Price (per gram): <input type="number" id="filamentPrice" value="0.05"></label>
+      <label>Used Filament (grams): <input type="number" id="filamentUsed" value="100"></label>
+      <label>Print Time (hours): <input type="number" id="filamentTime"></label>
+      <label>Power Draw (watts): <input type="number" id="filamentPower"></label>
+      <label>Electricity Rate (per kWh): <input type="number" id="filamentElec"></label>
+      <label>Labor Rate (per hour): <input type="number" id="filamentLabor"></label>
+      <label>Machine Amortization (months): <input type="number" id="filamentAmort"></label>
+      <label>Machine Price: <input type="number" id="filamentMachine"></label>
+      <label>Markup (%): <input type="number" id="filamentMarkup" value="30"></label>
+      <button type="button" onclick="calculateFilament()">Calculate</button>
+    </form>
+    <div id="filamentResult"></div>
+  </div>
 
-    function saveProject(type) {
-      let data = {};
-      if (type === 'resin') {
-        data.projectName = document.getElementById('resinProjectName').value;
-        data.currency = document.getElementById('resinCurrency').value;
-        let price = parseFloat(document.getElementById('resinPrice').value);
-        let used = parseFloat(document.getElementById('resinUsed').value);
-        let time = parseFloat(document.getElementById('resinPrintTime').value);
-        let power = parseFloat(document.getElementById('resinPower').value);
-        let rate = parseFloat(document.getElementById('resinElectricity').value);
-        let labor = parseFloat(document.getElementById('resinLabor').value);
-        let amort = parseFloat(document.getElementById('resinAmortization').value);
-        let machine = parseFloat(document.getElementById('resinMachinePrice').value);
-        let markup = parseFloat(document.getElementById('resinMarkup').value);
-
-        let materialCost = price * used;
-        let energyCost = (power * time / 1000) * rate;
-        let totalCost = materialCost + energyCost + labor + amort;
-        let finalPrice = totalCost * (1 + markup / 100);
-
-        data.type = 'Resin';
-        data.totalCost = totalCost.toFixed(2);
-        data.finalPrice = finalPrice.toFixed(2);
-      } else {
-        data.projectName = document.getElementById('filamentProjectName').value;
-        data.currency = document.getElementById('filamentCurrency').value;
-        let price = parseFloat(document.getElementById('filamentPrice').value);
-        let used = parseFloat(document.getElementById('filamentUsed').value);
-        let time = parseFloat(document.getElementById('filamentPrintTime').value);
-        let power = parseFloat(document.getElementById('filamentPower').value);
-        let rate = parseFloat(document.getElementById('filamentElectricity').value);
-        let labor = parseFloat(document.getElementById('filamentLabor').value);
-        let amort = parseFloat(document.getElementById('filamentAmortization').value);
-        let machine = parseFloat(document.getElementById('filamentMachinePrice').value);
-        let markup = parseFloat(document.getElementById('filamentMarkup').value);
-
-        let materialCost = price * used;
-        let energyCost = (power * time / 1000) * rate;
-        let totalCost = materialCost + energyCost + labor + amort;
-        let finalPrice = totalCost * (1 + markup / 100);
-
-        data.type = 'Filament';
-        data.totalCost = totalCost.toFixed(2);
-        data.finalPrice = finalPrice.toFixed(2);
-      }
-
-      projects.push(data);
-      renderHistory();
-    }
-
-    function renderHistory() {
-      let tbody = document.querySelector('#historyTable tbody');
-      tbody.innerHTML = '';
-      let overall = 0;
-      projects.forEach(proj => {
-        let row = `<tr>
-          <td>${proj.projectName}</td>
-          <td>${proj.type}</td>
-          <td>${proj.currency} ${proj.totalCost}</td>
-          <td>${proj.currency} ${proj.finalPrice}</td>
-        </tr>`;
-        tbody.innerHTML += row;
-        overall += parseFloat(proj.finalPrice);
-      });
-      document.getElementById('overallIncome').innerText = overall.toFixed(2);
-    }
-
-    function exportExcel() {
-      let ws_data = [["Project Name", "Type", "Total Cost", "Final Price"]];
-      projects.forEach(p => {
-        ws_data.push([p.projectName, p.type, p.currency + " " + p.totalCost, p.currency + " " + p.finalPrice]);
-      });
-      let ws = XLSX.utils.aoa_to_sheet(ws_data);
-      let wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Projects");
-      XLSX.writeFile(wb, "projects.xlsx");
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
