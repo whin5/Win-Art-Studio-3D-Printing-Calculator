@@ -2,76 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
+    <div class="logo-container">
+      <input type="file" id="logoUpload" accept="image/*">
+      <img id="logoPreview" alt="Logo Preview">
+    </div>
     <h1>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</h1>
-    <input type="file" id="logoUpload" accept="image/*">
-    <img id="logoPreview" alt="Logo Preview">
   </header>
 
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="resin">Resin Projects</button>
-    <button class="tab-btn" data-tab="filament">Filament Projects</button>
-  </div>
+  <main>
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-button active" data-tab="resin">Resin Projects</button>
+      <button class="tab-button" data-tab="filament">Filament Projects</button>
+    </div>
 
-  <div id="resin" class="tab-content active">
-    <form id="resinForm" class="project-form">
+    <!-- Resin Form -->
+    <div class="tab-content active" id="resin">
       <h2>Resin Project</h2>
-      <input type="text" id="resinProjectName" placeholder="Project Name">
-      <input type="text" id="resinCurrency" placeholder="Currency (₱, $, €)">
-      <input type="number" id="resinPrice" placeholder="Resin Price per ml/gram">
-      <input type="number" id="resinUsed" placeholder="Resin Used (ml/grams)">
-      <input type="number" id="resinTime" placeholder="Print Time (hours)">
-      <input type="number" id="resinPower" placeholder="Power Draw (W)">
-      <input type="number" id="resinElectricity" placeholder="Electricity Rate (/kWh)">
-      <input type="number" id="resinLabor" placeholder="Labor Rate (/hr)">
-      <input type="number" id="resinAmortization" placeholder="Machine Amortization">
-      <input type="number" id="resinMachine" placeholder="Machine Price">
-      <input type="number" id="resinMarkup" placeholder="Markup %">
-      <button type="button" onclick="calculateResin()">Save Resin Project</button>
-    </form>
-  </div>
+      <form id="resinForm">
+        <input type="text" placeholder="Project Name" id="resinName" required>
+        <input type="number" placeholder="Material Used (ml or g)" id="resinUsed" required>
+        <input type="number" placeholder="Material Price per ml/g" id="resinPrice" required>
+        <input type="number" placeholder="Print Time (hours)" id="resinTime">
+        <input type="number" placeholder="Power Draw (W)" id="resinPower">
+        <input type="number" placeholder="Electricity Rate per kWh" id="resinRate">
+        <input type="number" placeholder="Labor Rate per hour" id="resinLabor">
+        <input type="number" placeholder="Machine Price (Amortization)" id="resinMachine">
+        <input type="number" placeholder="Markup %" id="resinMarkup">
+        <button type="submit">Save Resin Project</button>
+      </form>
+    </div>
 
-  <div id="filament" class="tab-content">
-    <form id="filamentForm" class="project-form">
+    <!-- Filament Form -->
+    <div class="tab-content" id="filament">
       <h2>Filament Project</h2>
-      <input type="text" id="filamentProjectName" placeholder="Project Name">
-      <input type="text" id="filamentCurrency" placeholder="Currency (₱, $, €)">
-      <input type="number" id="filamentPrice" placeholder="Filament Price per gram">
-      <input type="number" id="filamentUsed" placeholder="Filament Used (grams)">
-      <input type="number" id="filamentTime" placeholder="Print Time (hours)">
-      <input type="number" id="filamentPower" placeholder="Power Draw (W)">
-      <input type="number" id="filamentElectricity" placeholder="Electricity Rate (/kWh)">
-      <input type="number" id="filamentLabor" placeholder="Labor Rate (/hr)">
-      <input type="number" id="filamentAmortization" placeholder="Machine Amortization">
-      <input type="number" id="filamentMachine" placeholder="Machine Price">
-      <input type="number" id="filamentMarkup" placeholder="Markup %">
-      <button type="button" onclick="calculateFilament()">Save Filament Project</button>
-    </form>
-  </div>
+      <form id="filamentForm">
+        <input type="text" placeholder="Project Name" id="filamentName" required>
+        <input type="number" placeholder="Material Used (g)" id="filamentUsed" required>
+        <input type="number" placeholder="Material Price per g" id="filamentPrice" required>
+        <input type="number" placeholder="Print Time (hours)" id="filamentTime">
+        <input type="number" placeholder="Power Draw (W)" id="filamentPower">
+        <input type="number" placeholder="Electricity Rate per kWh" id="filamentRate">
+        <input type="number" placeholder="Labor Rate per hour" id="filamentLabor">
+        <input type="number" placeholder="Machine Price (Amortization)" id="filamentMachine">
+        <input type="number" placeholder="Markup %" id="filamentMarkup">
+        <button type="submit">Save Filament Project</button>
+      </form>
+    </div>
 
-  <section class="history">
-    <h2>Project History</h2>
-    <table id="historyTable">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Project Name</th>
-          <th>Total Cost</th>
-          <th>Final Price</th>
-          <th>Currency</th>
-          <th>Invoice</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <button onclick="exportHistory()">Export History to Excel</button>
-  </section>
+    <!-- Project History -->
+    <section>
+      <h2>Project History</h2>
+      <table id="historyTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Total Cost</th>
+            <th>Income</th>
+            <th>Export Invoice</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="summary">
+        <p><strong>Total Income Summary: </strong><span id="totalIncome">₱0</span></p>
+      </div>
+      <button id="exportAll">Export All History to Excel</button>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
