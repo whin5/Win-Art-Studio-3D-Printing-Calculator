@@ -98,4 +98,40 @@ document.getElementById("r-calc").addEventListener("click", ()=>{
 
 // Filament Calculation
 document.getElementById("f-calc").addEventListener("click", ()=>{
-  const name = docu
+  const name = document.getElementById("f-name").value;
+  const currency = document.getElementById("f-currency").value;
+  const price = parseFloat(document.getElementById("f-price").value);
+  const used = parseFloat(document.getElementById("f-used").value);
+  const time = parseFloat(document.getElementById("f-time").value);
+  const watts = parseFloat(document.getElementById("f-watts").value);
+  const kwh = parseFloat(document.getElementById("f-kwh").value);
+  const labor = parseFloat(document.getElementById("f-laborRate").value);
+  const machine = parseFloat(document.getElementById("f-machine").value);
+  const markupPct = parseFloat(document.getElementById("f-markup").value);
+
+  const materialCost = (price/1000)*used;
+  const energyCost = (watts*time/1000)*kwh;
+  const laborCost = labor*time;
+  const machineCost = machine*time;
+  const subtotal = materialCost+energyCost+laborCost+machineCost;
+  const total = subtotal*(1+markupPct/100);
+
+  document.getElementById("f-results").innerHTML = `
+    <p>Total Cost: ${currency} ${total.toFixed(2)}</p>
+    <button class="btn" id="f-exportInvoice">Export Invoice</button>
+  `;
+
+  addToHistory({name,type:"Filament",totalCost:subtotal,totalIncome:total});
+
+  document.getElementById("f-exportInvoice").addEventListener("click", ()=>{
+    let csv = `Win Art Studio Invoice\n`;
+    csv += `Project Name,${name}\nType,Filament\n`;
+    csv += `Material Used (g),${used}\nFilament Price,${price}\n`;
+    csv += `Total Cost,${subtotal.toFixed(2)}\nTotal Income,${total.toFixed(2)}\n`;
+    const blob = new Blob([csv], {type:"text/csv"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${name}_invoice.csv`;
+    a.click();
+  });
+});
