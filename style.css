@@ -1,127 +1,82 @@
-/* Corporate Design - Professional Look */
-* {
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
 body {
+  font-family: Arial, sans-serif;
+  background: #f8f9fc;
   margin: 0;
   padding: 0;
-  background: #f9fafc;
-  color: #222;
+  color: #333;
 }
 
 header {
-  background: #0a2540;
+  background: #1a237e;
   color: white;
-  padding: 16px 32px;
-  font-size: 20px;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 20px;
+  text-align: center;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 32px auto;
-  padding: 24px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-}
-
-/* Tabs */
 .tabs {
   display: flex;
-  border-bottom: 2px solid #e2e8f0;
-  margin-bottom: 20px;
+  justify-content: center;
+  margin: 20px 0;
 }
 
-.tab {
-  padding: 12px 24px;
+.tab-btn {
+  padding: 12px 20px;
+  margin: 0 5px;
+  border: none;
   cursor: pointer;
-  background: #f1f5f9;
-  border-radius: 8px 8px 0 0;
-  margin-right: 4px;
-  transition: background 0.3s;
+  background: #e0e0e0;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-weight: bold;
 }
 
-.tab.active {
-  background: #0a2540;
+.tab-btn.active {
+  background: #3949ab;
   color: white;
-  font-weight: 600;
-}
-
-.tab:hover {
-  background: #cbd5e1;
 }
 
 .tab-content {
   display: none;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 600px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
 .tab-content.active {
   display: block;
 }
 
-/* Form Inputs */
 form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px 32px;
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 label {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-input, select {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 14px;
+input {
+  padding: 6px;
+  flex: 1;
+  margin-left: 10px;
 }
 
 button {
-  padding: 10px 20px;
-  background: #0a2540;
+  background: #1a237e;
   color: white;
+  padding: 10px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.3s;
+  transition: 0.3s;
 }
 
 button:hover {
-  background: #1e3a8a;
-}
-
-/* History Table */
-.history-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.history-table th, .history-table td {
-  padding: 12px;
-  border: 1px solid #e2e8f0;
-  text-align: left;
-}
-
-.history-table th {
-  background: #f1f5f9;
-}
-
-.summary-box {
-  margin-top: 16px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #0a2540;
+  background: #3949ab;
 }
