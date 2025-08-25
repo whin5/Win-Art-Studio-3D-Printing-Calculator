@@ -3,107 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Printing Cost Calculator</title>
+  <title>3D Print Costing Tool</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
+  <header>
     <h1>3D Printing Cost Calculator</h1>
-    
-    <!-- Tabs -->
+  </header>
+
+  <main>
     <div class="tabs">
-      <button class="tab-button active" data-tab="resin">Resin</button>
-      <button class="tab-button" data-tab="filament">Filament</button>
+      <button class="tab-btn active" data-tab="resin">Resin</button>
+      <button class="tab-btn" data-tab="filament">Filament</button>
     </div>
 
-    <!-- Resin Form -->
-    <div class="tab-content active" id="resin">
-      <form id="resinForm">
-        <label>Project Name</label>
-        <input type="text" id="resinProject" placeholder="Enter project name">
-
-        <label>Currency</label>
-        <input type="text" id="resinCurrency" value="$">
-
-        <label>Resin Price per Liter</label>
-        <input type="number" id="resinPrice" value="1200">
-
-        <label>Resin Used (ml)</label>
-        <input type="number" id="resinUsed">
-
-        <label>Print Time (hours)</label>
-        <input type="number" id="resinPrintTime">
-
-        <label>Printer Power Draw (watts)</label>
-        <input type="number" id="resinPowerDraw">
-
-        <label>Electricity Rate (per kWh)</label>
-        <input type="number" id="resinElectricity">
-
-        <label>Labor Rate (per hour)</label>
-        <input type="number" id="resinLabor">
-
-        <label>Operator + Post-processing Hours</label>
-        <input type="number" id="resinOperatorHours">
-
-        <label>Machine Price</label>
-        <input type="number" id="resinMachinePrice">
-
-        <label>Machine Amortization (years)</label>
-        <input type="number" id="resinAmortization">
-
-        <label>Markup (%)</label>
-        <input type="number" id="resinMarkup">
-
+    <div id="resin" class="tab-content active">
+      <form id="resinForm" class="calc-form">
+        <label>Project Name <input type="text" id="resinProject"></label>
+        <label>Currency <input type="text" id="resinCurrency" value="USD"></label>
+        <label>Resin Price per Liter <input type="number" id="resinPrice" value="1200"></label>
+        <label>Resin Used (L) <input type="number" id="resinUsed"></label>
+        <label>Print Time (hours) <input type="number" id="resinPrintTime"></label>
+        <label>Printer Power Draw (W) <input type="number" id="resinPower"></label>
+        <label>Electricity Rate (per kWh) <input type="number" id="resinElecRate"></label>
+        <label>Labor Rate (per hr) <input type="number" id="resinLabor"></label>
+        <label>Operator + Post Hours <input type="number" id="resinOperatorHours"></label>
+        <label>Machine Price <input type="number" id="resinMachinePrice"></label>
+        <label>Amortization (years) <input type="number" id="resinAmort"></label>
+        <label>Markup (%) <input type="number" id="resinMarkup"></label>
         <button type="button" onclick="calculateResin()">Calculate</button>
       </form>
       <div id="resinResult" class="result"></div>
     </div>
 
-    <!-- Filament Form -->
-    <div class="tab-content" id="filament">
-      <form id="filamentForm">
-        <label>Project Name</label>
-        <input type="text" id="filamentProject" placeholder="Enter project name">
-
-        <label>Currency</label>
-        <input type="text" id="filamentCurrency" value="$">
-
-        <label>Filament Price per Kg</label>
-        <input type="number" id="filamentPrice" value="800">
-
-        <label>Filament Used (grams)</label>
-        <input type="number" id="filamentUsed">
-
-        <label>Print Time (hours)</label>
-        <input type="number" id="filamentPrintTime">
-
-        <label>Printer Power Draw (watts)</label>
-        <input type="number" id="filamentPowerDraw">
-
-        <label>Electricity Rate (per kWh)</label>
-        <input type="number" id="filamentElectricity">
-
-        <label>Labor Rate (per hour)</label>
-        <input type="number" id="filamentLabor">
-
-        <label>Operator + Post-processing Hours</label>
-        <input type="number" id="filamentOperatorHours">
-
-        <label>Machine Price</label>
-        <input type="number" id="filamentMachinePrice">
-
-        <label>Machine Amortization (years)</label>
-        <input type="number" id="filamentAmortization">
-
-        <label>Markup (%)</label>
-        <input type="number" id="filamentMarkup">
-
+    <div id="filament" class="tab-content">
+      <form id="filamentForm" class="calc-form">
+        <label>Project Name <input type="text" id="filamentProject"></label>
+        <label>Currency <input type="text" id="filamentCurrency" value="USD"></label>
+        <label>Filament Type <input type="text" id="filamentType" value="eSUN PLA+"></label>
+        <label>Filament Price per Kg <input type="number" id="filamentPrice"></label>
+        <label>Filament Used (Kg) <input type="number" id="filamentUsed"></label>
+        <label>Print Time (hours) <input type="number" id="filamentPrintTime"></label>
+        <label>Printer Power Draw (W) <input type="number" id="filamentPower"></label>
+        <label>Electricity Rate (per kWh) <input type="number" id="filamentElecRate"></label>
+        <label>Labor Rate (per hr) <input type="number" id="filamentLabor"></label>
+        <label>Operator + Post Hours <input type="number" id="filamentOperatorHours"></label>
+        <label>Machine Price <input type="number" id="filamentMachinePrice"></label>
+        <label>Amortization (years) <input type="number" id="filamentAmort"></label>
+        <label>Markup (%) <input type="number" id="filamentMarkup"></label>
         <button type="button" onclick="calculateFilament()">Calculate</button>
       </form>
       <div id="filamentResult" class="result"></div>
     </div>
-  </div>
+
+    <div class="history">
+      <h2>Project History</h2>
+      <button onclick="exportToExcel()">Export Invoice to Excel</button>
+      <table id="historyTable">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Project</th>
+            <th>Total Cost</th>
+            <th>Currency</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
 
   <script src="script.js"></script>
 </body>
