@@ -4,8 +4,25 @@
   <meta charset="UTF-8">
   <title>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="script.js"></script>
 </head>
 <body>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tabs = document.querySelectorAll(".tab-button");
+      const contents = document.querySelectorAll(".tab-content");
+
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          tabs.forEach(t => t.classList.remove("active"));
+          contents.forEach(c => c.classList.remove("active"));
+
+          tab.classList.add("active");
+          document.getElementById(tab.dataset.tab).classList.add("active");
+        });
+      });
+    });
+  </script>
   <header>
     <div class="logo-container">
       <input type="file" id="logoUpload" accept="image/*">
