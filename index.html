@@ -3,75 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Win Art Studio – 3D Print Cost & Income Tracker</title>
+  <title>3D Printing Cost Calculator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Win Art Studio – 3D Print Cost & Income Tracker</h1>
+    <h1>3D Printing Cost Calculator</h1>
+    <form id="costForm">
+      <div class="form-group">
+        <label>Project Name</label>
+        <input type="text" id="projectName" placeholder="Enter project name">
+      </div>
 
-    <form id="calcForm">
-      <label>Currency:
-        <input type="text" id="currency" value="₱">
-      </label>
+      <div class="form-group">
+        <label>Material Type</label>
+        <select id="materialType">
+          <option value="resin">Resin</option>
+          <option value="filament">Filament (eSUN PLA+)</option>
+        </select>
+      </div>
 
-      <label>Resin Price per Liter:
-        <input type="number" id="resinPrice" value="1200">
-      </label>
+      <div class="form-group">
+        <label>Currency</label>
+        <input type="text" id="currency" value="PHP">
+      </div>
 
-      <label>Resin Used (ml):
-        <input type="number" id="resinUsed" value="500">
-      </label>
+      <div class="form-group">
+        <label>Material Price (per liter/kg)</label>
+        <input type="number" id="materialPrice" value="1200">
+      </div>
 
-      <label>Wastage %:
-        <input type="number" id="wastage" value="5">
-      </label>
+      <div class="form-group">
+        <label>Material Used (ml or g)</label>
+        <input type="number" id="materialUsed">
+      </div>
 
-      <label>IPA Consumables (₱):
-        <input type="number" id="ipa" value="50">
-      </label>
+      <div class="form-group">
+        <label>Print Time (hours)</label>
+        <input type="number" id="printTime">
+      </div>
 
-      <label>Print Time (hours):
-        <input type="number" id="printTime" value="10">
-      </label>
+      <div class="form-group">
+        <label>Printer Power Draw (W)</label>
+        <input type="number" id="powerDraw">
+      </div>
 
-      <label>Printer Power (watts):
-        <input type="number" id="printerPower" value="100">
-      </label>
+      <div class="form-group">
+        <label>Electricity Rate (per kWh)</label>
+        <input type="number" id="electricityRate">
+      </div>
 
-      <label>Electricity Rate (₱/kWh):
-        <input type="number" id="electricityRate" value="12">
-      </label>
+      <div class="form-group">
+        <label>Labor Rate (per hour)</label>
+        <input type="number" id="laborRate">
+      </div>
 
-      <label>Labor Rate (₱/hour):
-        <input type="number" id="laborRate" value="100">
-      </label>
+      <div class="form-group">
+        <label>Operator + Post Hours</label>
+        <input type="number" id="laborHours">
+      </div>
 
-      <label>Operator + Post Processing Hours:
-        <input type="number" id="operatorHours" value="2">
-      </label>
+      <div class="form-group">
+        <label>Machine Price</label>
+        <input type="number" id="machinePrice">
+      </div>
 
-      <label>Machine Amortization (₱/hour):
-        <input type="number" id="machineAmort" value="50">
-      </label>
+      <div class="form-group">
+        <label>Amortization Period (years)</label>
+        <input type="number" id="amortYears">
+      </div>
 
-      <label>Markup %:
+      <div class="form-group">
+        <label>Markup (%)</label>
         <input type="number" id="markup" value="30">
-      </label>
+      </div>
 
-      <button type="button" onclick="calculate()">Calculate</button>
+      <button type="button" onclick="calculateCost()">Calculate</button>
     </form>
 
-    <div class="results">
-      <h2>Results</h2>
-      <p id="materialCost"></p>
-      <p id="electricityCost"></p>
-      <p id="laborCost"></p>
-      <p id="machineCost"></p>
-      <p id="totalCost"></p>
-      <p id="finalPrice"></p>
-      <p id="income"></p>
-    </div>
+    <div id="result"></div>
   </div>
   <script src="script.js"></script>
 </body>
