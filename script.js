@@ -1,57 +1,66 @@
-// Tab switching using your snippet
+// Tab switching
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.dataset.tab;
-
-    // remove active from all tabs
     document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
-
-    // hide all panels
-    document.querySelectorAll('#resin, #filament, #history').forEach(p => {
-      p.style.display = 'none';
-    });
-
-    // show selected panel
-    document.querySelector(`#${tab}`).style.display = 'block';
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    document.getElementById(tab).style.display = 'block';
   });
 });
 
 // Logo preview
-const logoInput = document.getElementById('logoInput');
-const logoPreview = document.getElementById('logoPreview');
-logoInput.addEventListener('change', () => {
-  const file = logoInput.files[0];
-  if (file) {
-    logoPreview.src = URL.createObjectURL(file);
-    logoPreview.style.display = 'inline';
+document.getElementById('logoInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = document.getElementById('logoPreview');
+      img.src = reader.result;
+      img.style.display = 'inline-block';
+    }
+    reader.readAsDataURL(file);
   }
 });
 
-// History storage
-let projects = JSON.parse(localStorage.getItem('projects')) || [];
-const historyTableBody = document.querySelector('#historyTable tbody');
+// Project History
+let history = JSON.parse(localStorage.getItem('projects')) || [];
 
 function updateHistoryTable() {
-  historyTableBody.innerHTML = '';
-  projects.forEach(p => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${p.name}</td>
-      <td>${p.type}</td>
-      <td>${p.totalCost.toFixed(2)}</td>
-      <td>${p.totalIncome.toFixed(2)}</td>
-    `;
-    historyTableBody.appendChild(row);
+  const tbody = document.querySelector('#historyTable tbody');
+  tbody.innerHTML = '';
+  let totalIncome = 0;
+  history.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${p.name}</td><td>${p.type}</td><td>${p.totalCost}</td><td>${p.totalIncome}</td>`;
+    tbody.appendChild(tr);
+    totalIncome += Number(p.totalIncome);
   });
+  document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
 }
+updateHistoryTable();
 
-// Resin Calculation
+// Export to Excel (history)
+document.getElementById('exportHistory').addEventListener('click', () => {
+  let csv = 'Project Name,Type,Total Cost,Total Income\n';
+  history.forEach(p => {
+    csv += `${p.name},${p.type},${p.totalCost},${p.totalIncome}\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'project_history.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Simple calculate & save for Resin
 document.getElementById('r-calc').addEventListener('click', () => {
   const name = document.getElementById('r-name').value;
   const currency = document.getElementById('r-currency').value || '';
   const bottlePrice = Number(document.getElementById('r-bottlePrice').value);
-  const bottleVolume = Number(document.getElementById('r-bottleVolume').value);
+  const bottleVol = Number(document.getElementById('r-bottleVolume').value);
   const used = Number(document.getElementById('r-ml').value);
   const time = Number(document.getElementById('r-time').value);
   const watts = Number(document.getElementById('r-watts').value);
@@ -60,27 +69,23 @@ document.getElementById('r-calc').addEventListener('click', () => {
   const machine = Number(document.getElementById('r-machine').value);
   const markup = Number(document.getElementById('r-markup').value);
 
-  const materialCost = (used / bottleVolume) * bottlePrice;
-  const electricityCost = (watts / 1000) * time * kwh;
-  const totalCost = materialCost + electricityCost + labor + machine;
-  const totalIncome = totalCost * (1 + markup / 100);
+  const resinCost = (bottlePrice * used / bottleVol);
+  const electricity = (watts/1000)*time*kwh;
+  const laborCost = labor + machine + electricity; // summarized
+  const totalCost = resinCost + laborCost;
+  const totalIncome = totalCost * (1 + markup/100);
 
   document.getElementById('r-results').innerHTML = `
-    <p>Total Cost: ${currency} ${totalCost.toFixed(2)}</p>
-    <p>Total Income: ${currency} ${totalIncome.toFixed(2)}</p>
+    Total Cost: ${currency} ${totalCost.toFixed(2)}<br>
+    Total Income: ${currency} ${totalIncome.toFixed(2)}
   `;
 
-  projects.push({
-    name,
-    type: 'Resin',
-    totalCost,
-    totalIncome
-  });
-  localStorage.setItem('projects', JSON.stringify(projects));
+  history.push({name,type:'Resin',totalCost:totalCost.toFixed(2),totalIncome:totalIncome.toFixed(2)});
+  localStorage.setItem('projects', JSON.stringify(history));
   updateHistoryTable();
 });
 
-// Filament Calculation
+// Simple calculate & save for Filament
 document.getElementById('f-calc').addEventListener('click', () => {
   const name = document.getElementById('f-name').value;
   const currency = document.getElementById('f-currency').value || '';
@@ -93,38 +98,18 @@ document.getElementById('f-calc').addEventListener('click', () => {
   const machine = Number(document.getElementById('f-machine').value);
   const markup = Number(document.getElementById('f-markup').value);
 
-  const materialCost = (used / 1000) * price; // assuming price per kg
-  const electricityCost = (watts / 1000) * time * kwh;
-  const totalCost = materialCost + electricityCost + labor + machine;
-  const totalIncome = totalCost * (1 + markup / 100);
+  const materialCost = price*used/1000;
+  const electricity = (watts/1000)*time*kwh;
+  const laborCost = labor + machine + electricity; // summarized
+  const totalCost = materialCost + laborCost;
+  const totalIncome = totalCost*(1+markup/100);
 
   document.getElementById('f-results').innerHTML = `
-    <p>Total Cost: ${currency} ${totalCost.toFixed(2)}</p>
-    <p>Total Income: ${currency} ${totalIncome.toFixed(2)}</p>
+    Total Cost: ${currency} ${totalCost.toFixed(2)}<br>
+    Total Income: ${currency} ${totalIncome.toFixed(2)}
   `;
 
-  projects.push({
-    name,
-    type: 'Filament',
-    totalCost,
-    totalIncome
-  });
-  localStorage.setItem('projects', JSON.stringify(projects));
+  history.push({name,type:'Filament',totalCost:totalCost.toFixed(2),totalIncome:totalIncome.toFixed(2)});
+  localStorage.setItem('projects', JSON.stringify(history));
   updateHistoryTable();
 });
-
-// Export history to Excel
-document.getElementById('exportHistory').addEventListener('click', () => {
-  let csv = 'Project Name,Type,Total Cost,Total Income\n';
-  projects.forEach(p => {
-    csv += `${p.name},${p.type},${p.totalCost.toFixed(2)},${p.totalIncome.toFixed(2)}\n`;
-  });
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'project_history.csv';
-  link.click();
-});
-
-// Initialize table on load
-updateHistoryTable();
