@@ -1,124 +1,96 @@
-const tabs = document.querySelectorAll('.tab');
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-    document.getElementById(`panel-${tab.dataset.tab}`).style.display = 'block';
-    if(tab.dataset.tab==='history') updateHistoryTable();
+const $ = s=>document.querySelector(s);
+const $$ = s=>document.querySelectorAll(s);
+
+const currencies = [{code:'PHP',symbol:'₱'},{code:'USD',symbol:'$'},{code:'EUR',symbol:'€'}];
+function populateCurrencies(sel){
+  sel.innerHTML='';
+  currencies.forEach(c=>{
+    const opt=document.createElement('option'); opt.value=c.code; opt.textContent=c.code+' ('+c.symbol+')';
+    sel.appendChild(opt);
   });
-});
-
-const currencies = ['PHP','USD','EUR','JPY'];
-function populateCurrency(selId) {
-  const sel = document.getElementById(selId);
-  sel.innerHTML = '';
-  currencies.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
 }
-populateCurrency('f-currency');
-populateCurrency('r-currency');
+populateCurrencies($('#f-currency')); populateCurrencies($('#r-currency'));
 
-// Logo upload
-document.getElementById('logo-upload').addEventListener('change', e=>{
-  const file = e.target.files[0];
-  if(file){
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = document.getElementById('logo-img');
-      img.src = reader.result;
-      img.style.display='block';
-    }
-    reader.readAsDataURL(file);
-  }
-});
+$$('.tab').forEach(tab=>tab.addEventListener('click', ()=>{
+  const t=tab.dataset.tab;
+  $$('.tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  $$('.tab-panel').forEach(p=>p.style.display=p.id==='panel-'+t?'block':'none');
+}));
 
-function calculateTotal(materialCost, hours, power, electricityRate, laborRate, laborHours, machine, markup){
-  const energy = (power*hours/1000)*electricityRate;
-  const labor = laborRate*laborHours;
-  const subtotal = materialCost+energy+labor+machine;
-  const total = subtotal*(1+markup/100);
-  return total;
-}
-
-// Save projects
-let projects = JSON.parse(localStorage.getItem('projects')||'[]');
-
-function saveProject(type, name, currency, materialCost, total){
-  const proj = {type,name,currency,materialCost,total};
-  projects.push(proj);
+function saveProject(type,data){
+  const projects=JSON.parse(localStorage.getItem('projects')||'[]');
+  data.type=type;
+  data.total=data.subtotal+data.markup;
+  projects.push(data);
   localStorage.setItem('projects',JSON.stringify(projects));
+  renderHistory();
 }
 
-function updateHistoryTable(){
-  const tbody = document.querySelector('#history-table tbody');
+function renderHistory(){
+  const projects=JSON.parse(localStorage.getItem('projects')||'[]');
+  const tbody=$('#history-table tbody');
   tbody.innerHTML='';
   let totalIncome=0;
-  projects.forEach((p,i)=>{
-    totalIncome+=p.total;
-    const tr = document.createElement('tr');
-    tr.innerHTML=`<td>${p.name}</td><td>${p.type}</td><td>${p.materialCost.toFixed(2)}</td><td>${p.total.toFixed(2)}</td>
-      <td><button onclick="exportInvoice(${i})">Invoice</button></td>`;
-    tbody.appendChild(tr);
-  });
-  document.getElementById('total-income').textContent = totalIncome.toFixed(2);
-}
-
-// Filament calculation
-document.getElementById('f-calc').addEventListener('click',()=>{
-  const name = document.getElementById('f-name').value;
-  const currency = document.getElementById('f-currency').value;
-  const price = parseFloat(document.getElementById('f-price').value);
-  const used = parseFloat(document.getElementById('f-used').value);
-  const hours = parseFloat(document.getElementById('f-time').value);
-  const power = parseFloat(document.getElementById('f-power').value);
-  const electricity = parseFloat(document.getElementById('f-electricity').value);
-  const laborRate = parseFloat(document.getElementById('f-labor').value);
-  const machine = parseFloat(document.getElementById('f-machine').value);
-  const markup = parseFloat(document.getElementById('f-markup').value);
-  const materialCost = (used/1000)*price;
-  const total = calculateTotal(materialCost,hours,power,electricity,laborRate, hours, machine, markup);
-  document.getElementById('f-results').textContent=`Total: ${currency} ${total.toFixed(2)}`;
-  saveProject('Filament',name,currency,materialCost,total);
-});
-
-// Resin calculation
-document.getElementById('r-calc').addEventListener('click',()=>{
-  const name = document.getElementById('r-name').value;
-  const currency = document.getElementById('r-currency').value;
-  const price = parseFloat(document.getElementById('r-price').value);
-  const used = parseFloat(document.getElementById('r-used').value);
-  const hours = parseFloat(document.getElementById('r-time').value);
-  const power = parseFloat(document.getElementById('r-power').value);
-  const electricity = parseFloat(document.getElementById('r-electricity').value);
-  const laborRate = parseFloat(document.getElementById('r-labor').value);
-  const machine = parseFloat(document.getElementById('r-machine').value);
-  const markup = parseFloat(document.getElementById('r-markup').value);
-  const materialCost = (used/1000)*price;
-  const total = calculateTotal(materialCost,hours,power,electricity,laborRate,hours,machine,markup);
-  document.getElementById('r-results').textContent=`Total: ${currency} ${total.toFixed(2)}`;
-  saveProject('Resin',name,currency,materialCost,total);
-});
-
-// Export history summary
-document.getElementById('export-summary').addEventListener('click',()=>{
-  let csv = 'Project,Type,Material Cost,Total Income\n';
   projects.forEach(p=>{
-    csv+=`${p.name},${p.type},${p.materialCost},${p.total}\n`;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.name}</td><td>${p.type}</td><td>${p.total.toFixed(2)}</td><td>${p.total.toFixed(2)}</td>`;
+    tbody.appendChild(tr);
+    totalIncome+=p.total;
   });
-  const blob = new Blob([csv],{type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download='projects_summary.csv'; a.click();
-  URL.revokeObjectURL(url);
-});
-
-// Export single invoice
-function exportInvoice(index){
-  const p = projects[index];
-  let csv = `Win Art Studio Invoice\n\nProject: ${p.name}\nType: ${p.type}\nMaterial Cost: ${p.materialCost.toFixed(2)}\nTotal Cost: ${p.total.toFixed(2)}\n\nThank you for your business!`;
-  const blob = new Blob([csv],{type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download=`invoice_${p.name.replace(/\s/g,'_')}.csv`; a.click();
-  URL.revokeObjectURL(url);
+  $('#total-income').textContent=totalIncome.toFixed(2);
 }
+renderHistory();
+
+function calc(type){
+  if(type==='filament'){
+    const name=$('#f-name').value;
+    const price=+$('#f-priceKg').value;
+    const grams=+$('#f-grams').value;
+    const hours=+$('#f-time').value;
+    const kwh=+$('#f-kwh').value;
+    const labor=+$('#f-laborRate').value;
+    const machine=+$('#f-machine').value;
+    const misc=+$('#f-consumables').value;
+    const markupPct=+$('#f-markup').value;
+
+    const material=grams/1000*price;
+    const electricity=hours*kwh*0.12; // simplified
+    const laborCost=labor*hours+machine*hours;
+    const subtotal=material+electricity+laborCost+misc;
+    const markup=subtotal*markupPct/100;
+    const total=subtotal+markup;
+
+    $('#f-results').innerHTML=`<p>Total: ${total.toFixed(2)}</p>`;
+    saveProject('Filament',{name,subtotal,markup,total});
+  }else{
+    const name=$('#r-name').value;
+    const price=+$('#r-priceL').value;
+    const ml=+$('#r-ml').value;
+    const hours=+$('#r-time').value;
+    const kwh=+$('#r-kwh').value;
+    const labor=+$('#r-laborRate').value;
+    const machine=+$('#r-machine').value;
+    const misc=+$('#r-consumables').value;
+    const markupPct=+$('#r-markup').value;
+
+    const material=(ml/1000)*price;
+    const electricity=hours*kwh*0.12;
+    const laborCost=labor*hours+machine*hours;
+    const subtotal=material+electricity+laborCost+misc;
+    const markup=subtotal*markupPct/100;
+    const total=subtotal+markup;
+
+    $('#r-results').innerHTML=`<p>Total: ${total.toFixed(2)}</p>`;
+    saveProject('Resin',{name,subtotal,markup,total});
+  }
+}
+
+$('#f-calc').addEventListener('click',()=>calc('filament'));
+$('#r-calc').addEventListener('click',()=>calc('resin'));
+$('#f-clear').addEventListener('click',()=>$('#f-results').innerHTML='');
+$('#r-clear').addEventListener('click',()=>$('#r-results').innerHTML='');
+
+// Logo upload preview
+$('#logo-upload').addEventListener('change',e=>{
+  const file=e.target.files
