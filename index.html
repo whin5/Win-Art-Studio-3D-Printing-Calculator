@@ -3,50 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Win Art Studio: 3D Printing Calculator & Income Tracker</title>
+<title>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="container">
   <header>
-    <div class="logo-upload">
-      <input type="file" id="logoInput" accept="image/*">
-      <img id="logoPreview" src="" alt="Logo Preview">
-    </div>
-    <h1>Win Art Studio: 3D Printing Calculator & Income Tracker</h1>
+    <h1>Win Art Studio: 3D Printing Calculator and Income Tracker + Invoice</h1>
+    <label class="logo-upload">Upload Logo
+      <input type="file" id="logoInput">
+    </label>
+    <img id="logoPreview" src="" alt="Company Logo" style="display:none; max-height:50px;">
   </header>
 
   <div class="tabs">
-    <button class="tab active" data-tab="filament">Filament</button>
-    <button class="tab" data-tab="resin">Resin</button>
-    <button class="tab" data-tab="history">History</button>
+    <button class="tab-btn active" data-tab="resin">Resin</button>
+    <button class="tab-btn" data-tab="filament">Filament</button>
+    <button class="tab-btn" data-tab="history">History</button>
   </div>
 
-  <div id="panel-filament" class="tab-panel">
-    <h2>Filament Project</h2>
-    <div class="grid">
-      <label>Project Name<input type="text" id="f-name"></label>
-      <label>Currency<input type="text" id="f-currency" placeholder="e.g., PHP"></label>
-      <label>Material Price (per kg)<input type="number" id="f-priceKg" value="900"></label>
-      <label>Material Used (grams)<input type="number" id="f-grams" value="120"></label>
-      <label>Print Time (hours)<input type="number" id="f-time" value="6"></label>
-      <label>Printer Power Draw (W)<input type="number" id="f-watts" value="120"></label>
-      <label>Electricity Rate<input type="number" id="f-kwh" value="12"></label>
-      <label>Labor Rate<input type="number" id="f-laborRate" value="200"></label>
-      <label>Machine Amortization (per hour)<input type="number" id="f-machine" value="50"></label>
-      <label>Markup %<input type="number" id="f-markup" value="30"></label>
-      <button id="f-calc" class="btn">Calculate</button>
-    </div>
-    <div id="f-results" class="results"></div>
-  </div>
-
-  <div id="panel-resin" class="tab-panel" style="display:none">
+  <!-- Resin Tab -->
+  <div id="resin" class="tab-panel">
     <h2>Resin Project</h2>
     <div class="grid">
       <label>Project Name<input type="text" id="r-name"></label>
       <label>Currency<input type="text" id="r-currency" placeholder="e.g., PHP"></label>
-      <label>Resin Price (per ml)<input type="number" id="r-price" value="1.2"></label>
+      <label>Resin Bottle Price<input type="number" id="r-bottlePrice" value="1200"></label>
+      <label>Bottle Volume (ml)<input type="number" id="r-bottleVolume" value="1000"></label>
       <label>Resin Used (ml)<input type="number" id="r-ml" value="90"></label>
       <label>Print Time (hours)<input type="number" id="r-time" value="7.5"></label>
       <label>Printer Power Draw (W)<input type="number" id="r-watts" value="70"></label>
@@ -59,24 +42,12 @@
     <div id="r-results" class="results"></div>
   </div>
 
-  <div id="panel-history" class="tab-panel" style="display:none">
-    <h2>Project History</h2>
-    <button id="exportHistory" class="btn">Export History to Excel</button>
-    <table id="historyTable">
-      <thead>
-        <tr>
-          <th>Project Name</th>
-          <th>Type</th>
-          <th>Total Cost</th>
-          <th>Total Income</th>
-          <th>Invoice</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
+  <!-- Filament Tab -->
+  <div id="filament" class="tab-panel" style="display:none;">
+    <h2>Filament Project</h2>
+    <div class="grid">
+      <label>Project Name<input type="text" id="f-name"></label>
+      <label>Currency<input type="text" id="f-currency" placeholder="e.g., PHP"></label>
+      <label>Filament Price<input type="number" id="f-price" value="1000"></label>
+      <label>Filament Used (g)<input type="number" id="f-used" value="100"></label>
+      <label>Print Time (hours)<input type="number" id="f-time" value="7.5"></label>
