@@ -1,7 +1,6 @@
-// Tab switching
+// Tabs
 const tabs = document.querySelectorAll('.tab');
 const panels = document.querySelectorAll('.tab-panel');
-
 tabs.forEach(tab=>{
   tab.addEventListener('click', ()=>{
     tabs.forEach(t=>t.classList.remove('active'));
@@ -20,13 +19,11 @@ document.getElementById('logo-upload').addEventListener('change', e=>{
   }
 });
 
-// Utility to format currency
+// Utils
 function fmtMoney(code, n){ return `${code} ${n.toFixed(2)}`; }
-
-// History storage
 let projects = JSON.parse(localStorage.getItem('projects')||'[]');
 
-// Render history table
+// Render history
 function renderHistory(){
   const tbody = document.querySelector('#history-table tbody');
   tbody.innerHTML='';
@@ -46,7 +43,7 @@ function renderHistory(){
   document.getElementById('total-income').innerText = fmtMoney('PHP',totalIncome);
 }
 
-// Filament calculation
+// Filament Calc
 document.getElementById('f-calc').addEventListener('click',()=>{
   const name=document.getElementById('f-name').value;
   const currency=document.getElementById('f-currency').value;
@@ -68,17 +65,12 @@ document.getElementById('f-calc').addEventListener('click',()=>{
 
   document.getElementById('f-results').innerHTML=`Total: ${fmtMoney(currency,total)}`;
 
-  projects.push({
-    type:'Filament',
-    name,currency,
-    totalCost:subtotal,
-    total
-  });
+  projects.push({type:'Filament',name,currency,totalCost:subtotal,total});
   localStorage.setItem('projects',JSON.stringify(projects));
   renderHistory();
 });
 
-// Resin calculation
+// Resin Calc
 document.getElementById('r-calc').addEventListener('click',()=>{
   const name=document.getElementById('r-name').value;
   const currency=document.getElementById('r-currency').value;
@@ -98,4 +90,37 @@ document.getElementById('r-calc').addEventListener('click',()=>{
   const subtotal = materialCost+energy+laborCost+machineCost;
   const total = subtotal*(1+markup/100);
 
-  document.getElementById('r-results').inner
+  document.getElementById('r-results').innerHTML=`Total: ${fmtMoney(currency,total)}`;
+
+  projects.push({type:'Resin',name,currency,totalCost:subtotal,total});
+  localStorage.setItem('projects',JSON.stringify(projects));
+  renderHistory();
+});
+
+// Export summary
+document.getElementById('export-summary').addEventListener('click',()=>{
+  let csv = 'Type,Project Name,Total Cost,Total Income\n';
+  projects.forEach(p=>{
+    csv+=`${p.type},${p.name},${p.totalCost},${p.total}\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url;
+  a.download='projects_summary.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Export single invoice
+function exportInvoice(i){
+  const p=projects[i];
+  let csv = `Win Art Studio\nProject Invoice\nType,Project Name,Total Cost,Total Income\n${p.type},${p.name},${p.totalCost},${p.total}\n`;
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url;
+  a.download=`invoice_${p.name}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
