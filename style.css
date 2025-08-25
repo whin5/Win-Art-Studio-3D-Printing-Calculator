@@ -1,18 +1,18 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8;
+  background-color: #f5f6fa;
   color: #333;
   margin: 0;
-  padding: 0;
 }
 
 .container {
-  max-width: 1100px;
+  width: 95%;
+  max-width: 1200px;
   margin: 20px auto;
-  padding: 20px;
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 header {
@@ -27,90 +27,81 @@ header h1 {
   margin-bottom: 10px;
 }
 
-.logo-upload {
-  display: inline-block;
-  cursor: pointer;
-  padding: 6px 12px;
-  background: #0073e6;
-  color: #fff;
-  border-radius: 4px;
+.logo-upload input {
+  display: none;
 }
 
 .tabs {
   margin-top: 20px;
-  display: flex;
-  gap: 10px;
 }
 
 .tab-btn {
   padding: 10px 20px;
-  cursor: pointer;
-  background: #e0e0e0;
+  margin-right: 5px;
+  background-color: #dcdde1;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
 }
 
 .tab-btn.active {
-  background: #0073e6;
+  background-color: #0097e6;
   color: #fff;
 }
 
 .tab-panel {
-  margin-top: 20px;
+  border: 1px solid #dcdde1;
+  border-top: none;
+  padding: 20px;
+  display: block;
+  border-radius: 0 0 12px 12px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
 }
 
 label {
   display: flex;
   flex-direction: column;
-  font-size: 0.9rem;
 }
 
 input {
-  padding: 6px;
-  margin-top: 3px;
+  padding: 8px;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  border-radius: 4px;
 }
 
 .btn {
-  margin-top: 10px;
+  margin-top: 15px;
   padding: 10px;
-  cursor: pointer;
-  background: #0073e6;
+  background-color: #0097e6;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .results {
   margin-top: 15px;
   padding: 10px;
-  background: #f1f5f9;
-  border-radius: 4px;
+  background: #f1f2f6;
+  border-radius: 8px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 table, th, td {
-  border: 1px solid #ccc;
+  border: 1px solid #333;
 }
 
 th, td {
   padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #0073e6;
-  color: #fff;
+  text-align: center;
 }
